@@ -8,6 +8,10 @@ export default class PlatformTable extends StandardTable {
     createColumns = () => {
         return [
             {
+                title: 'ID',
+                dataIndex: 'id',
+            },
+            {
                 title: '平台名称',
                 dataIndex: 'name',
             },

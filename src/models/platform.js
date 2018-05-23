@@ -1,7 +1,6 @@
-import { routerRedux } from 'dva/router';
+// import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import { find, detail, update, add } from '../services/platform';
-import { find as findShop } from '../services/shop';
 
 export default {
     namespace: 'platform',
@@ -19,14 +18,6 @@ export default {
             },
         },
         detail: {},
-        shopListData: {
-            list: [],
-            pagination: {
-                total: 0,
-                current: 0,
-            },
-        },
-        modalVisible: false,
     },
 
     effects: {
@@ -49,7 +40,7 @@ export default {
             const response = yield call(find, payload);
             if (response.success) {
                 yield put({
-                    type: 'finded',
+                    type: 'setListData',
                     payload: response.data,
                 });
             }
@@ -63,12 +54,18 @@ export default {
             const response = yield call(detail, payload);
             if (response.success) {
                 yield put({
-                    type: 'fetchDetail',
+                    type: 'setDetail',
                     payload: response.data,
                 });
             } else {
                 message.error(response.data);
             }
+        },
+        *clearDetail(_, { put }) {
+            yield put({
+                type: 'setDetail',
+                payload: {},
+            });
         },
         *update({ payload }, { call }) {
             const response = yield call(update, payload);
@@ -76,31 +73,14 @@ export default {
                 message.success('保存成功');
             }
         },
-        *findShop({ payload }, { call, put }) {
-            const response = yield call(findShop, payload);
-            if (response.success) {
-                yield put({
-                    type: 'findedShop',
-                    payload: response.data,
-                });
-            }
-        },
-        *add({ payload }, { call, put }) {
+        *add({ payload, callback }, { call }) {
             const response = yield call(add, payload);
             if (response.success) {
                 message.success('添加成功');
-                yield put({
-                    type: 'added',
-                });
+                callback && callback();
             } else {
                 message.error(response.data);
             }
-        },
-        *changeModalVisible({ payload }, { put }) {
-            yield put({
-                type: 'changedModalVisible',
-                payload,
-            });
         },
     },
 
@@ -119,7 +99,7 @@ export default {
                 },
             };
         },
-        finded(state, { payload }) {
+        setListData(state, { payload }) {
             return {
                 ...state,
                 listData: {
@@ -135,30 +115,10 @@ export default {
                 },
             };
         },
-        fetchDetail(state, { payload }) {
+        setDetail(state, { payload }) {
             return {
                 ...state,
                 detail: payload,
-            };
-        },
-        findedShop(state, { payload }) {
-            return {
-                ...state,
-                shopListData: {
-                    ...payload,
-                },
-            };
-        },
-        added(state) {
-            return {
-                ...state,
-                modalVisible: false,
-            };
-        },
-        changedModalVisible(state, { payload }) {
-            return {
-                ...state,
-                modalVisible: payload,
             };
         },
     },

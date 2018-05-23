@@ -5,6 +5,10 @@ const menuData = [
         path: 'goods',
         children: [
             {
+                name: '平台列表',
+                path: 'platform-list',
+            },
+            {
                 name: '品牌列表',
                 path: 'brand-list',
             },

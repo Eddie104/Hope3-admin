@@ -1,14 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Divider, Button, Table, Input, Form, Row, Col, Tabs, message } from 'antd';
+import { Card, Button, Input, Form, Row, Col, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-// import ShopTable from '../Shop/ShopTable';
-// import Ellipsis from '../../../components/Ellipsis';
 import FooterToolbar from '../../../components/FooterToolbar';
-// import SubscribeTableForm from './SubscribeTableForm';
-
-// const { Option } = Select;
-// const TabPane = Tabs.TabPane;
 
 @connect(state => ({
     platform: state.platform,
@@ -29,15 +23,6 @@ export default class PlatformEditor extends Component {
             setFieldsValue({
                 name: detail.name,
                 domain: detail.domain,
-            });
-            // 获取shop列表
-            this.props.dispatch({
-                type: 'platform/findShop',
-                payload: {
-                    platform: detail._id,
-                    page: 1,
-                    count: 10,
-                },
             });
         }
     }
@@ -81,7 +66,7 @@ export default class PlatformEditor extends Component {
         });
     }
 
-    renderFormItem = (label, field, rules, Component, isFirst = false) => {
+    renderFormItem = (label, field, rules, Component, isFirst = false) => { // eslint-disable-line
         let xl = { span: 6, offset: 2 };
         let lg = { span: 8 };
         let md = { span: 12 };
@@ -105,10 +90,6 @@ export default class PlatformEditor extends Component {
     }
 
     render() {
-        // const { brandSeriesSource } = this.state;
-        const { form: { getFieldDecorator }, platform: { detail, shopListData } } = this.props;
-        // console.log(detail);
-        // console.log(listData);
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>

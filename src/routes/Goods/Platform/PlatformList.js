@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Icon, Button, Modal } from 'antd';
+import { Row, Col, Card, Form, Input, Button, Modal } from 'antd';
 import PlatformTable from './PlatformTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
@@ -10,6 +10,7 @@ const FormItem = Form.Item;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 const FIELDS = {
+    id: 1,
     name: 1,
     domain: 1,
 };
@@ -22,6 +23,7 @@ export default class PlatformList extends PureComponent {
     state = {
         addNameInputValue: '',
         addDomainInputValue: '',
+        modalVisible: false,
     };
 
     componentDidMount() {
@@ -32,7 +34,7 @@ export default class PlatformList extends PureComponent {
         this.handleSearch();
     }
 
-    handleStandardTableChange = (pagination, filtersArg, sorter) => {
+    handleStandardTableChange = (pagination, filtersArg) => {
         const { dispatch, platform: { findFormValue } } = this.props;
 
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
@@ -89,9 +91,8 @@ export default class PlatformList extends PureComponent {
     }
 
     handleModalVisible = (flag) => {
-        this.props.dispatch({
-            type: 'platform/changeModalVisible',
-            payload: !!flag,
+        this.setState({
+            modalVisible: !!flag,
         });
     }
 
@@ -113,6 +114,13 @@ export default class PlatformList extends PureComponent {
             payload: {
                 name: this.state.addNameInputValue,
                 domain: this.state.addDomainInputValue,
+            },
+            callback: () => {
+                this.setState({
+                    modalVisible: false,
+                    addNameInputValue: '',
+                    addDomainInputValue: '',
+                });
             },
         });
     }
@@ -145,8 +153,8 @@ export default class PlatformList extends PureComponent {
     }
 
     render() {
-        const { platform: { loading, listData, modalVisible } } = this.props;
-        const { addNameInputValue, addDomainInputValue } = this.state;
+        const { platform: { loading, listData } } = this.props;
+        const { addNameInputValue, addDomainInputValue, modalVisible } = this.state;
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
