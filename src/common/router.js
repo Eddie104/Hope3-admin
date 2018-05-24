@@ -65,14 +65,17 @@ export const getRouterData = (app) => {
         '/goods/edit-platform/:id': {
             component: dynamicWrapper(app, ['platform'], () => import('../routes/Goods/Platform/PlatformEditor')),
         },
-        '/goods/goods-type-list': {
-            component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeList')),
-        },
+        // '/goods/goods-type-list': {
+        //     component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeList')),
+        // },
         // '/goods/edit-goods-type/:id': {
         //     component: dynamicWrapper(app, ['goodsType', 'category'], () => import('../routes/Goods/GoodsType/GoodsTypeEditor')),
         // },
         '/goods/brand-list': {
             component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/BrandList')),
+        },
+        '/goods/naifen': {
+            component: dynamicWrapper(app, ['naifen'], () => import('../routes/Tmp/NaiFenList')),
         },
         '/goods/edit-brand/:id': {
             component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/BrandEditor')),

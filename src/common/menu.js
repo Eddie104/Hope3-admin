@@ -4,37 +4,26 @@ const menuData = [
         icon: 'user',
         path: 'goods',
         children: [
-            {
-                name: '平台列表',
-                path: 'platform-list',
-            },
-            {
-                name: '品牌列表',
-                path: 'brand-list',
-            },
-            {
-                name: '类目列表',
-                path: 'category-list',
-            },
             // {
-            //     name: '款型列表',
-            //     path: 'goods-type-list',
+            //     name: '平台列表',
+            //     path: 'platform-list',
             // },
             // {
-            //     name: '商品列表',
-            //     path: 'goods-list',
+            //     name: '品牌列表',
+            //     path: 'brand-list',
+            // },
+            // {
+            //     name: '类目列表',
+            //     path: 'category-list',
+            // },
+            // {
+            //     name: '待处理商品列表',
+            //     path: 'pending-goods-list',
             // },
             {
-                name: '待处理商品列表',
-                path: 'pending-goods-list',
+                name: '奶粉',
+                path: 'naifen',
             },
-            // {
-            //     path: 'edit-goods-type',
-            // },
-            // {
-            //     name: '编号相似的待处理商品列表',
-            //     path: 'similar-number-goods-list',
-            // },
         ],
     },
 ];
