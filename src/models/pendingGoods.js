@@ -4,6 +4,9 @@ import {
     find,
     fetchBrandAndCategory,
 } from '../services/pendingGoods';
+import {
+    fetchSubCategory,
+} from '../services/category';
 
 export default {
     namespace: 'pendingGoods',
@@ -82,7 +85,19 @@ export default {
             const response = yield call(fetchBrandAndCategory);
             if (response.success) {
                 yield put({
-                    type: 'fetchedBrandAndCategory',
+                    type: 'setBrandAndCategory',
+                    payload: response.data,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *fetchSubCategory({ callback, payload }, { call, put }) {
+            const response = yield call(fetchSubCategory, payload);
+            if (response.success) {
+                yield put({
+                    type: 'setSubCategory',
                     payload: response.data,
                 });
                 callback && callback();
@@ -122,10 +137,16 @@ export default {
                 },
             };
         },
-        fetchedBrandAndCategory(state, { payload }) {
+        setBrandAndCategory(state, { payload }) {
             return {
                 ...state,
                 ...payload,
+            };
+        },
+        setSubCategory(state, { payload }) {
+            return {
+                ...state,
+                subCategory: payload,
             };
         },
     },

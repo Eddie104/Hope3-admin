@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Button, Select, Spin } from 'antd';
 import PendingGoodsTable from './PendingGoodsTable';
+import NewGoodsTypeModal from './NewGoodsTypeModal';
 // import Ellipsis from '../../../components/Ellipsis';
 import MyCheckbox from '../../../components/MyCheckbox';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -17,16 +18,19 @@ const FIELDS = {
     id: 1,
 };
 
-const Goods_TYPE_FIELDS = { // eslint-disable-line
-    name: 1,
-    imgs: 1,
-};
-
 @connect(state => ({
     pendingGoods: state.pendingGoods,
 }))
 @Form.create()
 export default class PendingGoodsList extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isShowingNewGoodsTypeModal: false,
+            targetPendingGoods: null,
+        };
+    }
+
     componentDidMount() {
         const { pendingGoods: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
@@ -100,6 +104,21 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleNewGoodsType = (pendingGoods) => {
+        this.setState({
+            isShowingNewGoodsTypeModal: true,
+            targetPendingGoods: pendingGoods,
+        });
+    }
+
+    handleNewGoodsTypeOK = () => {
+
+    }
+
+    handleNewGoodsTypeCancel = () => {
+        
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
@@ -151,7 +170,8 @@ export default class PendingGoodsList extends PureComponent {
     }
 
     render() {
-        const { pendingGoods: { loading, listData } } = this.props;
+        const { isShowingNewGoodsTypeModal, targetPendingGoods } = this.state;
+        const { pendingGoods: { loading, listData, brands, category, subCategory }, dispatch } = this.props;
         return (
             <PageHeaderLayout>
                 <Spin spinning={false} tip="自动关联中，请稍候。。。">
@@ -173,10 +193,21 @@ export default class PendingGoodsList extends PureComponent {
                                 data={listData}
                                 onSelectRow={this.handleSelectRows}
                                 onChange={this.handleStandardTableChange}
+                                onNewGoodsType={this.handleNewGoodsType}
                             />
                         </div>
                     </Card>
                 </Spin>
+                <NewGoodsTypeModal
+                    visible={isShowingNewGoodsTypeModal}
+                    pendingGoods={targetPendingGoods}
+                    dispatch={dispatch}
+                    brands={brands}
+                    category={category}
+                    subCategory={subCategory}
+                    handleOk={this.handleNewGoodsTypeOK}
+                    handleCancel={this.handleNewGoodsTypeCancel}
+                />
             </PageHeaderLayout>
         );
     }
