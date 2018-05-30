@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'dva/router';
 import StandardTable from '../../../components/StandardTable';
 
 export default class GoodsTypeTable extends StandardTable {
@@ -27,8 +28,10 @@ export default class GoodsTypeTable extends StandardTable {
             {
                 title: '操作',
                 width: '100px',
-                render: () => (
-                    <a>详情</a>
+                render: (_, record) => (
+                    <Link to={`/goods/goods-type-editor/${record._id}`}>
+                        编辑
+                    </Link>
                 ),
             },
         ];

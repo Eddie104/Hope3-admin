@@ -1,5 +1,6 @@
 // import { message } from 'antd';
-import { find } from '../services/goodsType';
+import { message } from 'antd';
+import { find, detail, fetchSubCategory } from '../services/goodsType';
 
 export default {
     namespace: 'goodsType',
@@ -15,20 +16,12 @@ export default {
                 current: 0,
             },
         },
+        detail: null,
+        brands: [],
+        category: [],
+        subCategory: [],
     },
     effects: {
-        // *add({ payload, callback }, { call, put }) {
-        //     const response = yield call(add, payload);
-        //     if (response.success) {
-        //         yield put({
-        //             type: 'added',
-        //             payload: response.data,
-        //         });
-        //         callback && callback();
-        //     } else {
-        //         message.error(response.data);
-        //     }
-        // },
         *find({ payload }, { call, put }) {
             yield put({
                 type: 'changeStyleListLoading',
@@ -57,17 +50,30 @@ export default {
                 payload: false,
             });
         },
-        // *detail({ payload }, { call, put }) {
-        //     const response = yield call(detail, payload);
-        //     if (response.success) {
-        //         yield put({
-        //             type: 'fetchDetail',
-        //             payload: response.data,
-        //         });
-        //     } else {
-        //         message.error(response.data);
-        //     }
-        // },
+        *detail({ payload, callback }, { call, put }) {
+            const response = yield call(detail, payload);
+            if (response.success) {
+                yield put({
+                    type: 'setDetail',
+                    payload: response.data,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *fetchSubCategory({ payload, callback }, { call, put }) {
+            const response = yield call(fetchSubCategory, payload);
+            if (response.success) {
+                yield put({
+                    type: 'setSubCategory',
+                    payload: response.data,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
         // *update({ payload }, { call, put }) {
         //     const response = yield call(update, payload);
         //     if (response.success) {
@@ -78,20 +84,12 @@ export default {
         //         });
         //     }
         // },
-        // *fetchSubCategory({ payload }, { call, put }) {
-        //     const response = yield call(fetchSubCategory, payload);
-        //     if (response.success) {
-        //         yield put({
-        //             type: 'fetchedSubCategory',
-        //             payload: response.data,
-        //         });
-        //     }
-        // },
-        // *clearDetail(_, { put }) {
-        //     yield put({
-        //         type: 'clearedDetail',
-        //     });
-        // },
+        *clearDetail(_, { put }) {
+            yield put({
+                type: 'setDetail',
+                payload: null,
+            });
+        },
     },
     reducers: {
         changeStyleListLoading(state, { payload }) {
@@ -141,28 +139,25 @@ export default {
                 },
             };
         },
-        // fetchDetail(state, { payload }) {
-        //     const { category, subCategory } = payload;
-        //     category.sub_category = subCategory;
-        //     return {
-        //         ...state,
-        //         detail: category,
-        //     };
-        // },
-        // fetchedSubCategory(state, { payload }) {
-        //     return {
-        //         ...state,
-        //         subCategoryArr: payload,
-        //     };
-        // },
-        // clearedDetail(state) {
-        //     return {
-        //         ...state,
-        //         detail: {
-        //             name: '',
-        //             sub_category: [],
-        //         },
-        //     };
-        // },
+        setDetail(state, { payload }) {
+            if (payload) {
+                return {
+                    ...state,
+                    detail: payload.goodsType,
+                    brands: payload.brands,
+                    category: payload.category,
+                };
+            }
+            return {
+                ...state,
+                detail: null,
+            };
+        },
+        setSubCategory(state, { payload }) {
+            return {
+                ...state,
+                subCategory: payload,
+            };
+        },
     },
 };

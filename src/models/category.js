@@ -1,6 +1,6 @@
-import { routerRedux } from 'dva/router';
 import { message } from 'antd';
 import { find, detail, update, add, fetchSubCategory } from '../services/category';
+
 export default {
     namespace: 'category',
     state: {
