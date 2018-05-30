@@ -33,6 +33,10 @@ const menuData = [
                 path: 'category-list',
             },
             {
+                name: '款型列表',
+                path: 'goods-type-list',
+            },
+            {
                 name: '待处理商品列表',
                 path: 'pending-goods-list',
             },

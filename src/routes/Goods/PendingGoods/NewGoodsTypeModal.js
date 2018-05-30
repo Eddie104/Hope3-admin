@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Modal, Form, Input, Row, Col, Select, Spin } from 'antd';
-import { GENDER } from '../../../config';
+import { GENDER, IMG_SERVER } from '../../../config';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -29,7 +29,7 @@ export default class NewGoodsTypeModal extends PureComponent {
             category: nextProps.category,
             subCategory: nextProps.subCategory,
             visible: !!nextProps.visible,
-            pendingGoods: nextProps.pendingGoods,
+            pendingGoods: { ...nextProps.pendingGoods },
             isShowingSpin: false,
         });
     }
@@ -42,12 +42,21 @@ export default class NewGoodsTypeModal extends PureComponent {
 
     handleOk = () => {
         const { handleOk } = this.props;
-        handleOk && handleOk();
+        handleOk && handleOk(this.state.pendingGoods);
     }
 
     handleCancel = () => {
         const { handleCancel } = this.props;
         handleCancel && handleCancel();
+    }
+
+    handleGenderChange = (value) => {
+        this.setState({
+            pendingGoods: {
+                ...this.state.pendingGoods,
+                gender: value,
+            },
+        });
     }
 
     handleGoodsTypeName = ({ target: { value } }) => {
@@ -101,6 +110,15 @@ export default class NewGoodsTypeModal extends PureComponent {
                 series: 'null',
             },
             series,
+        });
+    }
+
+    handleSeriesChange = (value) => {
+        this.setState({
+            pendingGoods: {
+                ...this.state.pendingGoods,
+                series: value,
+            },
         });
     }
 
@@ -191,8 +209,8 @@ export default class NewGoodsTypeModal extends PureComponent {
                             </Col>
                         </Row>
                     </FormItem>
-                    {/* {
-                        pendingGoods && (
+                    {
+                        pendingGoods && Array.isArray(pendingGoods.imgs) && (
                             <FormItem
                                 labelCol={{ span: 5 }}
                                 wrapperCol={{ span: 15 }}
@@ -204,7 +222,7 @@ export default class NewGoodsTypeModal extends PureComponent {
                                             <Col span={4} key={index}>
                                                 <img
                                                     alt={`${pendingGoods.number}_${img}`}
-                                                    src={`${QINIU_DOMAIN}/goods/${pendingGoods.number.replace(/[ /]/g, '_')}/${img}`}
+                                                    src={`${IMG_SERVER}/${pendingGoods.platform}/${img}`}
                                                     style={{ width: '120px' }}
                                                 />
                                             </Col>
@@ -213,7 +231,7 @@ export default class NewGoodsTypeModal extends PureComponent {
                                 </Row>
                             </FormItem>
                         )
-                    } */}
+                    }
                 </Spin>
             </Modal>
         );

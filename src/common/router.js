@@ -74,6 +74,9 @@ export const getRouterData = (app) => {
         '/goods/brand-list': {
             component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/BrandList')),
         },
+        '/goods/goods-type-list': {
+            component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeList')),
+        },
         '/goods/naifen': {
             component: dynamicWrapper(app, ['naifen'], () => import('../routes/Tmp/NaiFenList')),
         },

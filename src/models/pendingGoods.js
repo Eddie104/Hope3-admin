@@ -3,6 +3,8 @@ import { message } from 'antd';
 import {
     find,
     fetchBrandAndCategory,
+    addGoodsType,
+    setCheck,
 } from '../services/pendingGoods';
 import {
     fetchSubCategory,
@@ -105,6 +107,19 @@ export default {
                 message.error(response.data);
             }
         },
+        *addGoodsType({ payload, callback }, { call, put }) {
+            const response = yield call(addGoodsType, payload);
+            if (response.success) {
+                yield call(setCheck, payload._id);
+                yield put({
+                    type: 'setChecked',
+                    payload: payload._id,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
     },
 
     reducers: {
@@ -147,6 +162,22 @@ export default {
             return {
                 ...state,
                 subCategory: payload,
+            };
+        },
+        setChecked(state, { payload }) {
+            const list = [...state.listData.list];
+            for (let i = 0; i < list.length; i += 1) {
+                if (list[i]._id === payload) {
+                    list[i].is_checked = true;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                listData: {
+                    ...state.listData,
+                    list,
+                },
             };
         },
     },

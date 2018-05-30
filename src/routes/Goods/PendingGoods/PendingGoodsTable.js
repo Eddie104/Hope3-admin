@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import { QINIU_DOMAIN } from '../../../config';
+import { IMG_SERVER } from '../../../config';
 
 export default class PendingGoodsTable extends StandardTable {
     createRowSelection = () => null;
@@ -24,7 +24,7 @@ export default class PendingGoodsTable extends StandardTable {
             {
                 title: '主图',
                 render: (text, record) => (
-                    <img style={{ width: '130px' }} alt={record.name} src={`${QINIU_DOMAIN}/goods/${record.number.replace(/[ /]/g, '_')}/${record.imgs[0]}`} />
+                    <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.platform}/${record.imgs[0]}`} />
                 ),
             },
             {

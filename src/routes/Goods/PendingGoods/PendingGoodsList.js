@@ -111,12 +111,22 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
-    handleNewGoodsTypeOK = () => {
-
+    handleNewGoodsTypeOK = (pendingGoods) => {
+        this.props.dispatch({
+            type: 'pendingGoods/addGoodsType',
+            payload: pendingGoods,
+            callback: () => {
+                this.setState({
+                    isShowingNewGoodsTypeModal: false,
+                });
+            },
+        });
     }
 
     handleNewGoodsTypeCancel = () => {
-        
+        this.setState({
+            isShowingNewGoodsTypeModal: false,
+        });
     }
 
     renderForm() {
