@@ -22,7 +22,7 @@ export default class PendingGoodsTable extends StandardTable {
                 ),
             },
             {
-                title: '主图',
+                title: '图片',
                 render: (text, record) => (
                     <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.platform}/${record.imgs[0]}`} />
                 ),

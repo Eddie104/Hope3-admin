@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Button } from 'antd';
-import GoodsTypeTable from './GoodsTypeTable';
+import GoodsTable from './GoodsTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 import styles from '../../style.less';
@@ -15,12 +15,12 @@ const FIELDS = {
 };
 
 @connect(state => ({
-    goodsType: state.goodsType,
+    goods: state.goods,
 }))
 @Form.create()
-export default class GoodsTypeList extends PureComponent {
+export default class GoodsList extends PureComponent {
     componentDidMount() {
-        const { goodsType: { findFormValue }, form: { setFieldsValue } } = this.props;
+        const { goods: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
             name: findFormValue.name,
         });
@@ -28,7 +28,7 @@ export default class GoodsTypeList extends PureComponent {
     }
 
     handleStandardTableChange = (pagination, filtersArg) => {
-        const { dispatch, goodsType: { findFormValue } } = this.props;
+        const { dispatch, goods: { findFormValue } } = this.props;
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
             const newObj = { ...obj };
             newObj[key] = getValue(filtersArg[key]);
@@ -42,7 +42,7 @@ export default class GoodsTypeList extends PureComponent {
             ...filters,
         };
         dispatch({
-            type: 'goodsType/find',
+            type: 'goods/find',
             payload: params,
         });
     }
@@ -51,7 +51,7 @@ export default class GoodsTypeList extends PureComponent {
         const { form, dispatch } = this.props;
         form.resetFields();
         dispatch({
-            type: 'goodsType/find',
+            type: 'goods/find',
             payload: {
                 fields: FIELDS,
                 page: 1,
@@ -63,7 +63,7 @@ export default class GoodsTypeList extends PureComponent {
 
     handleSearch = (e) => {
         e && e.preventDefault();
-        const { dispatch, form, goodsType: { listData } } = this.props;
+        const { dispatch, form, goods: { listData } } = this.props;
         if (!e && listData.list.length > 0) return;
         form.validateFields((err, fieldsValue) => {
             if (err) return;
@@ -71,7 +71,7 @@ export default class GoodsTypeList extends PureComponent {
                 ...fieldsValue,
             };
             dispatch({
-                type: 'goodsType/find',
+                type: 'goods/find',
                 payload: {
                     fields: FIELDS,
                     page: 1,
@@ -106,7 +106,7 @@ export default class GoodsTypeList extends PureComponent {
     }
 
     render() {
-        const { goodsType: { loading, listData } } = this.props;
+        const { goods: { loading, listData } } = this.props;
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -114,20 +114,11 @@ export default class GoodsTypeList extends PureComponent {
                         <div className={styles.tableListForm}>
                             {this.renderForm()}
                         </div>
-                        {/* <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={this.handleAutoRelation}>
-                                    relation by name
-                                </Button>
-                                <Button type="primary" onClick={this.handleAutoRelationByNumber}>
-                                    relation by number
-                                </Button>
-                            </div> */}
-                        <GoodsTypeTable
+                        <GoodsTable
                             loading={loading}
                             data={listData}
                             onSelectRow={this.handleSelectRows}
                             onChange={this.handleStandardTableChange}
-                            // onNewGoodsType={this.handleNewGoodsType}
                         />
                     </div>
                 </Card>

@@ -1,8 +1,8 @@
 import { message } from 'antd';
-import { find, detail, fetchSubCategory, update } from '../services/goodsType';
+import { find, detail, update } from '../services/goods';
 
 export default {
-    namespace: 'goodsType',
+    namespace: 'goods',
     state: {
         loading: false,
         findFormValue: {
@@ -15,11 +15,8 @@ export default {
                 current: 0,
             },
         },
-        goodsColorArr: [],
         detail: null,
-        brands: [],
-        category: [],
-        subCategory: [],
+        platform: [],
     },
     effects: {
         *find({ payload }, { call, put }) {
@@ -62,31 +59,12 @@ export default {
                 message.error(response.data);
             }
         },
-        *fetchSubCategory({ payload, callback }, { call, put }) {
-            const response = yield call(fetchSubCategory, payload);
-            if (response.success) {
-                yield put({
-                    type: 'setSubCategory',
-                    payload: response.data,
-                });
-                callback && callback();
-            } else {
-                message.error(response.data);
-            }
-        },
         *update({ payload, callback }, { call }) {
             const response = yield call(update, payload);
             if (response.success) {
                 message.success('保存成功');
                 callback && callback();
             }
-        },
-        *updateGoodsColor({ payload, callback }, { put }) {
-            yield put({
-                type: 'updateGoodsColorById',
-                payload,
-            });
-            callback && callback();
         },
         *clearDetail(_, { put }) {
             yield put({
@@ -130,39 +108,20 @@ export default {
             if (payload) {
                 return {
                     ...state,
-                    detail: payload.goodsType,
-                    goodsColorArr: payload.goodsColorArr,
-                    brands: payload.brands,
-                    category: payload.category,
+                    detail: payload.goods,
+                    platform: payload.platform,
                 };
             }
             return {
                 ...state,
-                goodsColorArr: [],
                 detail: null,
-                brands: [],
-                category: [],
-                subCategory: [],
             };
         },
-        setSubCategory(state, { payload }) {
-            return {
-                ...state,
-                subCategory: payload,
-            };
-        },
-        updateGoodsColorById(state, { payload }) {
-            const goodsColorArr = [...state.goodsColorArr];
-            for (let i = 0; i < goodsColorArr.length; i += 1) {
-                if (goodsColorArr[i]._id === payload._id) {
-                    goodsColorArr[i] = payload;
-                    break;
-                }
-            }
-            return {
-                ...state,
-                goodsColorArr,
-            };
-        },
+        // setSubCategory(state, { payload }) {
+        //     return {
+        //         ...state,
+        //         subCategory: payload,
+        //     };
+        // },
     },
 };

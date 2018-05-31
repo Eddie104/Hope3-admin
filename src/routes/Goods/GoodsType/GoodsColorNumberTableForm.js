@@ -2,21 +2,21 @@ import React from 'react';
 import { Input } from 'antd';
 import TableForm from '../../../components/TableForm';
 
-export default class SeriesTableForm extends TableForm {
+export default class GoodsColorNumberTableForm extends TableForm {
     createColumns = () => {
         return [
             {
-                title: '系列名称',
-                dataIndex: 'name',
-                key: 'name',
+                title: '编号',
+                dataIndex: 'number',
+                key: 'number',
                 render: (text, record) => {
                     if (record.editable) {
                         return (
                             <Input
                                 value={text}
-                                onChange={e => this.handleFieldChange(e, 'name', record.key)}
+                                onChange={e => this.handleFieldChange(e, 'number', record.key)}
                                 onKeyPress={e => this.handleKeyPress(e, record.key)}
-                                placeholder="请输入系列名称"
+                                placeholder="请输入编号"
                             />
                         );
                     }

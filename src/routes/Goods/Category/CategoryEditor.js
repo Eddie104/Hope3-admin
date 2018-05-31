@@ -4,6 +4,7 @@ import { Card, Button, Input, Form, Row, Col, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
 import SubCategoryTableForm from './SubCategoryTableForm';
+
 @connect(state => ({
     category: state.category,
 }))

@@ -37,6 +37,10 @@ const menuData = [
                 path: 'goods-type-list',
             },
             {
+                name: '商品列表',
+                path: 'goods-list',
+            },
+            {
                 name: '待处理商品列表',
                 path: 'pending-goods-list',
             },
@@ -60,8 +64,6 @@ if (userStr) {
 } else {
     menuDataLast = menuData;
 }
-
-console.log(menuDataLast);
 
 function formatter(data, parentPath = '') {
     return data.map((item) => {

@@ -52,9 +52,6 @@ export default class PlatformEditor extends Component {
             if (err) {
                 message.error(err.name.errors[0].message);
             } else {
-                // utils.cleanObject(values);
-                // utils.cleanObject(values.condition);
-                // console.log(values);
                 dispatch({
                     type: 'platform/update',
                     payload: {
@@ -114,14 +111,6 @@ export default class PlatformEditor extends Component {
                             }
                         </Row>
                     </Form>
-                    {/* <Divider /> */}
-                    {/* <Card title="商铺列表" >
-                        <ShopTable
-                            loading={false}
-                            data={shopListData}
-                            onChange={this.handleStandardTableChange}
-                        />
-                    </Card> */}
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handlerSubmit} loading={false}>
                             提交

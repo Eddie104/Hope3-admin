@@ -78,7 +78,7 @@ export const getRouterData = (app) => {
             component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeList')),
         },
         '/goods/goods-type-editor/:id': {
-            component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeEditor')),
+            component: dynamicWrapper(app, ['goodsType', 'goodsColor'], () => import('../routes/Goods/GoodsType/GoodsTypeEditor')),
         },
         '/goods/naifen': {
             component: dynamicWrapper(app, ['naifen'], () => import('../routes/Tmp/NaiFenList')),
@@ -92,6 +92,12 @@ export const getRouterData = (app) => {
         // '/goods/edit-goods/:id': {
         //     component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/Goods/GoodsEditor')),
         // },
+        '/goods/goods-list': {
+            component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/Goods/GoodsList')),
+        },
+        '/goods/goods-editor/:id': {
+            component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/Goods/GoodsEditor')),
+        },
         '/goods/pending-goods-list': {
             component: dynamicWrapper(app, ['pendingGoods'], () => import('../routes/Goods/PendingGoods/PendingGoodsList')),
         },

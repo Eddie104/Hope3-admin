@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Input, Form, Row, Col, Select, Divider, message } from 'antd';
+import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
-import { GENDER } from '../../../config';
+import GoodsColorEditor from './GoodsColorEditor';
+import { GENDER, IMG_SERVER } from '../../../config';
+import styles from '../../style.less';
 
 const { Option } = Select;
 
 @connect(state => ({
     goodsType: state.goodsType,
+    goodsColor: state.goodsColor,
 }))
 @Form.create()
 export default class GoodsTypeEditor extends Component {
@@ -16,6 +19,8 @@ export default class GoodsTypeEditor extends Component {
         super(props);
         this.state = {
             series: [],
+            isShowingGoodsColorEditor: false,
+            targetGoodsColorId: null,
         };
     }
 
@@ -25,13 +30,24 @@ export default class GoodsTypeEditor extends Component {
             type: 'goodsType/detail',
             payload: id,
             callback: () => {
-                const { form: { setFieldsValue }, goodsType: { detail } } = this.props;
+                const { form: { setFieldsValue }, goodsType: { detail, brands } } = this.props;
                 setFieldsValue({
                     name: detail.name,
                     gender: detail.gender,
                     brand: detail.brand,
                     series: detail.series,
+                    category: detail.category,
+                    sub_category: detail.sub_category,
                 });
+                for (let i = 0; i < brands.length; i += 1) {
+                    if (brands[i]._id === detail.brand) {
+                        this.setState({
+                            series: brands[i].series,
+                        });
+                        break;
+                    }
+                }
+                this.handleCategoryChange(detail.category);
             },
         });
     }
@@ -72,19 +88,57 @@ export default class GoodsTypeEditor extends Component {
             this.setState({
                 series: targetBrand.series,
             });
+            const { form: { setFieldsValue } } = this.props;
+            setFieldsValue({
+                series: 'null',
+            });
         }
     }
 
     handleCategoryChange = (value) => {
+        if (value) {
+            this.props.dispatch({
+                type: 'goodsType/fetchSubCategory',
+                payload: value,
+            });
+        }
+    }
+
+    handleGoodsColorClick = (goodsColorId) => {
+        this.setState({
+            isShowingGoodsColorEditor: true,
+            targetGoodsColorId: goodsColorId,
+        });
+    }
+
+    handleGoodsColorEditorOK = (goodsColorData) => {
         this.props.dispatch({
-            type: 'goodsType/fetchSubCategory',
-            payload: value,
+            type: 'goodsColor/update',
+            payload: goodsColorData,
+            callback: () => {
+                this.setState({
+                    isShowingGoodsColorEditor: false,
+                    targetGoodsColorId: null,
+                }, () => {
+                    this.props.dispatch({
+                        type: 'goodsType/updateGoodsColor',
+                        payload: goodsColorData,
+                    });
+                });
+            },
+        });
+    }
+
+    handleGoodsColorEditorCancel = () => {
+        this.setState({
+            isShowingGoodsColorEditor: false,
+            targetGoodsColorId: null,
         });
     }
 
     render() {
-        const { series } = this.state;
-        const { form: { getFieldDecorator }, goodsType: { brands, category, subCategory } } = this.props;
+        const { series, isShowingGoodsColorEditor, targetGoodsColorId } = this.state;
+        const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -128,6 +182,7 @@ export default class GoodsTypeEditor extends Component {
                                 <Form.Item label="系列">
                                     {getFieldDecorator('series')(
                                         <Select style={{ width: '100%' }} placeholder="请输入系列">
+                                            <Option key="null" value="null">无系列</Option>
                                             {
                                                 series.map(seriesItem => (
                                                     <Option key={seriesItem._id} value={seriesItem._id}>{seriesItem.name}</Option>
@@ -168,12 +223,45 @@ export default class GoodsTypeEditor extends Component {
                         </Row>
                     </Form>
                     <Divider>配色信息</Divider>
+                    <List
+                        rowKey="id"
+                        grid={{ gutter: 24, lg: 6, md: 4, sm: 1, xs: 1 }}
+                        dataSource={['', ...goodsColorArr]}
+                        renderItem={item =>
+                            (item ? (
+                                <List.Item key={item.id}>
+                                    <Card hoverable onClick={() => { this.handleGoodsColorClick(item._id); }}>
+                                        <Row>
+                                            <img style={{ width: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
+                                        </Row>
+                                        <Row type="flex" justify="center">
+                                            {item.color_name || 'no name'}
+                                        </Row>
+                                    </Card>
+                                </List.Item>
+                            ) : (
+                                <List.Item>
+                                    <Button type="dashed" className={styles.newButton}>
+                                        <Icon type="plus" /> 新增配色
+                                    </Button>
+                                </List.Item>
+                            ))
+                        }
+                    />
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handleSubmit} loading={false}>
                             提交
                         </Button>
                     </FooterToolbar>
                 </Card>
+                <GoodsColorEditor
+                    visible={isShowingGoodsColorEditor}
+                    goodsColorId={targetGoodsColorId}
+                    dispatch={this.props.dispatch}
+                    detail={this.props.goodsColor.detail}
+                    handleOk={this.handleGoodsColorEditorOK}
+                    handleCancel={this.handleGoodsColorEditorCancel}
+                />
             </PageHeaderLayout>
         );
     }
