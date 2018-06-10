@@ -13,6 +13,10 @@ export async function addGoodsType(params) {
     return post(`${SERVER_URL}/admin/add_goods_type`, params);
 }
 
+export async function connectGoodsType(params) {
+    return post(`${SERVER_URL}/admin/connect_goods_type`, params);
+}
+
 export async function setCheck(_id) {
     return get(`${SERVER_URL}/admin/set_pending_goods_check/${_id}`);
 }

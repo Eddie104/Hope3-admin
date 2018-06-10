@@ -195,9 +195,9 @@ export default class GoodsTypeEditor extends Component {
                         </Row>
                         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                             <Col md={8}>
-                                <Form.Item label="類目">
+                                <Form.Item label="类目">
                                     {getFieldDecorator('category')(
-                                        <Select style={{ width: '100%' }} placeholder="请输入類目" onChange={this.handleCategoryChange}>
+                                        <Select style={{ width: '100%' }} placeholder="请输入类目" onChange={this.handleCategoryChange}>
                                             {
                                                 category.map(item => (
                                                     <Option key={item._id} value={item._id}>{item.name}</Option>
@@ -208,9 +208,9 @@ export default class GoodsTypeEditor extends Component {
                                 </Form.Item>
                             </Col>
                             <Col md={8}>
-                                <Form.Item label="子類目">
+                                <Form.Item label="子类目">
                                     {getFieldDecorator('sub_category')(
-                                        <Select style={{ width: '100%' }} placeholder="请输入子類目">
+                                        <Select style={{ width: '100%' }} placeholder="请输入子类目">
                                             {
                                                 subCategory.map(subCategoryItem => (
                                                     <Option key={subCategoryItem._id} value={subCategoryItem._id}>{subCategoryItem.name}</Option>
@@ -225,23 +225,25 @@ export default class GoodsTypeEditor extends Component {
                     <Divider>配色信息</Divider>
                     <List
                         rowKey="id"
-                        grid={{ gutter: 24, lg: 6, md: 4, sm: 1, xs: 1 }}
+                        grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
                         dataSource={['', ...goodsColorArr]}
                         renderItem={item =>
                             (item ? (
-                                <List.Item key={item.id}>
-                                    <Card hoverable onClick={() => { this.handleGoodsColorClick(item._id); }}>
-                                        <Row>
-                                            <img style={{ width: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
-                                        </Row>
-                                        <Row type="flex" justify="center">
-                                            {item.color_name || 'no name'}
-                                        </Row>
-                                    </Card>
+                                <List.Item key={item.id} onClick={() => this.handleGoodsColorClick(item._id)}>
+                                    <Row type="flex" justify="center">
+                                        <img style={{ width: '120px', height: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
+                                    </Row>
+                                    <Row type="flex" justify="center">
+                                        {item.color_name || 'no name'}
+                                    </Row>
                                 </List.Item>
                             ) : (
                                 <List.Item>
-                                    <Button type="dashed" className={styles.newButton}>
+                                    <Button
+                                        type="dashed"
+                                        className={styles.newButton}
+                                        style={{ width: '120px', height: '120px' }}
+                                    >
                                         <Icon type="plus" /> 新增配色
                                     </Button>
                                 </List.Item>

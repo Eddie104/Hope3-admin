@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Row, Col, Card, Form, Input, Button, Select, Spin } from 'antd';
 import PendingGoodsTable from './PendingGoodsTable';
 import NewGoodsTypeModal from './NewGoodsTypeModal';
+import ConnectGoodsTypeModal from './ConnectGoodsTypeModal';
 // import Ellipsis from '../../../components/Ellipsis';
 import MyCheckbox from '../../../components/MyCheckbox';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
@@ -27,6 +28,7 @@ export default class PendingGoodsList extends PureComponent {
         super(props);
         this.state = {
             isShowingNewGoodsTypeModal: false,
+            isShowingConnectGoodsTypeModal: false,
             targetPendingGoods: null,
         };
     }
@@ -129,6 +131,32 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleConnectGoodsType = (pendingGoods) => {
+        this.setState({
+            isShowingConnectGoodsTypeModal: true,
+            targetPendingGoods: pendingGoods,
+        });
+    }
+
+    handleConnectGoodsTypeOK = (pendingGoods) => {
+        console.log(pendingGoods);
+        // this.props.dispatch({
+        //     type: 'pendingGoods/connectGoodsType',
+        //     payload: pendingGoods,
+        //     callback: () => {
+        //         this.setState({
+        //             isShowingConnectGoodsTypeModal: false,
+        //         });
+        //     },
+        // });
+    }
+
+    handleConnectGoodsTypeCancel = () => {
+        this.setState({
+            isShowingConnectGoodsTypeModal: false,
+        });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
@@ -180,7 +208,7 @@ export default class PendingGoodsList extends PureComponent {
     }
 
     render() {
-        const { isShowingNewGoodsTypeModal, targetPendingGoods } = this.state;
+        const { isShowingNewGoodsTypeModal, isShowingConnectGoodsTypeModal, targetPendingGoods } = this.state;
         const { pendingGoods: { loading, listData, brands, category, subCategory }, dispatch } = this.props;
         return (
             <PageHeaderLayout>
@@ -204,6 +232,7 @@ export default class PendingGoodsList extends PureComponent {
                                 onSelectRow={this.handleSelectRows}
                                 onChange={this.handleStandardTableChange}
                                 onNewGoodsType={this.handleNewGoodsType}
+                                onConnectGoodsType={this.handleConnectGoodsType}
                             />
                         </div>
                     </Card>
@@ -217,6 +246,15 @@ export default class PendingGoodsList extends PureComponent {
                     subCategory={subCategory}
                     handleOk={this.handleNewGoodsTypeOK}
                     handleCancel={this.handleNewGoodsTypeCancel}
+                />
+                <ConnectGoodsTypeModal
+                    visible={isShowingConnectGoodsTypeModal}
+                    pendingGoods={targetPendingGoods}
+                    dispatch={dispatch}
+                    // category={category}
+                    // subCategory={subCategory}
+                    handleOk={this.handleConnectGoodsTypeOK}
+                    handleCancel={this.handleConnectGoodsTypeCancel}
                 />
             </PageHeaderLayout>
         );

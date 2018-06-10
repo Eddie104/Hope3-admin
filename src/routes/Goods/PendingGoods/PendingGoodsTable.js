@@ -18,7 +18,7 @@ export default class PendingGoodsTable extends StandardTable {
                 dataIndex: 'name',
                 width: '250px',
                 render: (text, record) => (
-                    <a href={record.url} target="_blank">{record.name}</a>
+                    <a href={record.url} target="_blank" rel="nofollow me noopener noreferrer">{record.name}</a>
                 ),
             },
             {
@@ -41,7 +41,7 @@ export default class PendingGoodsTable extends StandardTable {
                             {
                                 !record.has_same_goods_type_name && <Divider type="vertical" />
                             }
-                            <a onClick={() => this.props.onRelationGoodsType(record)}>关联款型</a>
+                            <a onClick={() => this.props.onConnectGoodsType(record)}>关联款型</a>
                         </div>
                     )
                 ),

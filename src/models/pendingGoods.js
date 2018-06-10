@@ -4,11 +4,15 @@ import {
     find,
     fetchBrandAndCategory,
     addGoodsType,
+    connectGoodsType,
     setCheck,
 } from '../services/pendingGoods';
 import {
     fetchSubCategory,
 } from '../services/category';
+import {
+    find as findGoodsType,
+} from '../services/goodsType';
 
 export default {
     namespace: 'pendingGoods',
@@ -31,15 +35,6 @@ export default {
         brands: [],
         category: [],
         subCategory: [],
-        goodsTypeData: {
-            list: [],
-            pagination: {
-                total: 0,
-                current: 0,
-            },
-            brandArr: [],
-            goodsArr: [],
-        },
     },
 
     effects: {
@@ -116,6 +111,27 @@ export default {
                     payload: payload._id,
                 });
                 callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *connectGoodsType({ payload, callback }, { call, put }) {
+            const response = yield call(connectGoodsType, payload);
+            if (response.success) {
+                yield call(setCheck, payload._id);
+                yield put({
+                    type: 'setChecked',
+                    payload: payload._id,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *findGoodsType({ payload, callback }, { call }) {
+            const response = yield call(findGoodsType, payload);
+            if (response.success) {
+                callback && callback(response.data);
             } else {
                 message.error(response.data);
             }
