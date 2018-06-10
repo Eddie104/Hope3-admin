@@ -21,7 +21,7 @@ export default class GoodsTable extends StandardTable {
             {
                 title: '图片',
                 render: (text, record) => (
-                    <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.imgs[0]}`} />
+                    <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.img}`} />
                 ),
             },
             {
