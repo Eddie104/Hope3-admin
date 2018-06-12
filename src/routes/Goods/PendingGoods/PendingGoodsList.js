@@ -138,17 +138,19 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
-    handleConnectGoodsTypeOK = (pendingGoods) => {
-        console.log(pendingGoods);
-        // this.props.dispatch({
-        //     type: 'pendingGoods/connectGoodsType',
-        //     payload: pendingGoods,
-        //     callback: () => {
-        //         this.setState({
-        //             isShowingConnectGoodsTypeModal: false,
-        //         });
-        //     },
-        // });
+    handleConnectGoodsTypeOK = (goodsTypeId) => {
+        this.props.dispatch({
+            type: 'pendingGoods/connectGoodsType',
+            payload: {
+                ...this.state.targetPendingGoods,
+                goods_type_id: goodsTypeId,
+            },
+            callback: () => {
+                this.setState({
+                    isShowingConnectGoodsTypeModal: false,
+                });
+            },
+        });
     }
 
     handleConnectGoodsTypeCancel = () => {

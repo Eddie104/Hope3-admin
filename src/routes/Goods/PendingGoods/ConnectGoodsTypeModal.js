@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Row, List } from 'antd';
+import { Modal, Form, Input, Row, List, Badge } from 'antd';
 import { IMG_SERVER } from '../../../config';
 
 const FormItem = Form.Item;
@@ -9,8 +9,10 @@ export default class ConnectGoodsTypeModal extends PureComponent {
         super(props);
         this.state = {
             visible: !!props.visible,
+            pendingGoods: props.pendingGoods,
             goodsTypeNameKeyWord: '',
             goodsTypeListData: props.goodsTypeListData || [],
+            selectedGoodsTypeId: 0,
         };
     }
 
@@ -21,6 +23,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
     componentWillReceiveProps(nextProps) {
         this.setState({
             visible: !!nextProps.visible,
+            pendingGoods: { ...nextProps.pendingGoods },
         });
     }
 
@@ -47,9 +50,15 @@ export default class ConnectGoodsTypeModal extends PureComponent {
         });
     }
 
+    handleGoodsTypeSelected = (value) => {
+        this.setState({
+            selectedGoodsTypeId: value,
+        });
+    }
+
     handleOk = () => {
-        // const { handleOk } = this.props;
-        // handleOk && handleOk(this.state.pendingGoods);
+        const { handleOk } = this.props;
+        handleOk && handleOk(this.state.selectedGoodsTypeId);
     }
 
     handleCancel = () => {
@@ -58,7 +67,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
     }
 
     render() {
-        const { visible, goodsTypeNameKeyWord, goodsTypeListData } = this.state;
+        const { visible, pendingGoods, goodsTypeNameKeyWord, goodsTypeListData, selectedGoodsTypeId } = this.state;
         return (
             <Modal
                 title="关联款型"
@@ -68,6 +77,14 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                 width={1200}
                 destroyOnClose
             >
+                {
+                    pendingGoods && pendingGoods.platform && (
+                        <Row>
+                            <img style={{ width: '130px' }} alt={pendingGoods.name} src={`${IMG_SERVER}/${pendingGoods.platform}/${pendingGoods.imgs[0]}`} />
+                            {pendingGoods.name}
+                        </Row>
+                    )
+                }
                 <FormItem
                     labelCol={{ span: 5 }}
                     wrapperCol={{ span: 15 }}
@@ -80,13 +97,20 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                     grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
                     dataSource={goodsTypeListData.list}
                     renderItem={item => (
-                        <List.Item key={item.id}>
-                            <Row type="flex" justify="center">
-                                <img style={{ width: '120px', height: '120px' }} alt={item.name} src={`${IMG_SERVER}/${item.img}`} />
-                            </Row>
-                            <Row type="flex" justify="center">
-                                {item.name}
-                            </Row>
+                        <List.Item key={item._id}>
+                            <Badge dot={selectedGoodsTypeId === item._id}>
+                                <Row type="flex" justify="center">
+                                    <img
+                                        style={{ width: '120px', height: '120px' }}
+                                        alt={item.name}
+                                        src={`${IMG_SERVER}/${item.img}`}
+                                        onClick={() => this.handleGoodsTypeSelected(item._id)}
+                                    />
+                                </Row>
+                                <Row type="flex" justify="center">
+                                    {item.name}
+                                </Row>
+                            </Badge>
                         </List.Item>
                     )}
                 />
