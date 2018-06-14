@@ -12,6 +12,7 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 const FIELDS = {
     name: 1,
     id: 1,
+    img: 1,
 };
 
 @connect(state => ({
@@ -40,6 +41,7 @@ export default class GoodsTypeList extends PureComponent {
             count: pagination.pageSize,
             ...findFormValue,
             ...filters,
+            fields: FIELDS,
         };
         dispatch({
             type: 'goodsType/find',
