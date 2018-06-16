@@ -111,7 +111,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                                         />
                                     </Row>
                                     <Row type="flex" justify="center">
-                                        <Ellipsis className={styles.item} lines={1}>{item.name}</Ellipsis>
+                                        <Ellipsis className={styles.item} lines={3}>{item.name}</Ellipsis>
                                     </Row>
                                 </Badge>
                             </List.Item>
