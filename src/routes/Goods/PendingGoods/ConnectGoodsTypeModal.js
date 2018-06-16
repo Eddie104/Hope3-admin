@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Row, List, Tooltip, Badge } from 'antd';
+import { Modal, Form, Input, Row, List, Tooltip, Badge, Pagination } from 'antd';
 import Ellipsis from '../../../components/Ellipsis';
 import { IMG_SERVER } from '../../../config';
 import styles from '../../style.less';
@@ -13,7 +13,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
             visible: !!props.visible,
             pendingGoods: props.pendingGoods,
             goodsTypeNameKeyWord: '',
-            goodsTypeListData: props.goodsTypeListData || [],
+            goodsTypeListData: props.goodsTypeListData || { pagination: 1, total: 1 },
             selectedGoodsTypeId: 0,
         };
     }
@@ -49,6 +49,21 @@ export default class ConnectGoodsTypeModal extends PureComponent {
             goodsTypeNameKeyWord: value,
         }, () => {
             this.fetchGoodsType();
+        });
+    }
+
+    handleGoodsTypePageChange = (current, pageSize) => {
+        this.props.dispatch({
+            type: 'pendingGoods/findGoodsType',
+            payload: {
+                name: this.state.goodsTypeNameKeyWord,
+                page: current,
+                count: pageSize,
+                fields: { _id: 1, name: 1, img: 1 },
+            },
+            callback: (goodsTypeListData) => {
+                this.setState({ goodsTypeListData });
+            },
         });
     }
 
@@ -118,6 +133,9 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                         </Tooltip>
                     )}
                 />
+                <Row type="flex" justify="end">
+                    <Pagination current={goodsTypeListData.pagination.current} total={goodsTypeListData.pagination.total} pageSize={12} onChange={this.handleGoodsTypePageChange} />
+                </Row>
             </Modal>
         );
     }
