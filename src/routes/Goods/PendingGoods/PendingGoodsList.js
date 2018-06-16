@@ -30,6 +30,7 @@ export default class PendingGoodsList extends PureComponent {
             isShowingNewGoodsTypeModal: false,
             isShowingConnectGoodsTypeModal: false,
             targetPendingGoods: null,
+            isShowingSpin: false,
         };
     }
 
@@ -159,6 +160,17 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleAutoConnectByNumber = () => {
+        this.setState({ isShowingSpin: true }, () => {
+            this.props.dispatch({
+                type: 'pendingGoods/autoConnectByNumber',
+                callback: () => {
+                    this.setState({ isShowingSpin: false });
+                },
+            });
+        });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
@@ -210,24 +222,24 @@ export default class PendingGoodsList extends PureComponent {
     }
 
     render() {
-        const { isShowingNewGoodsTypeModal, isShowingConnectGoodsTypeModal, targetPendingGoods } = this.state;
+        const { isShowingNewGoodsTypeModal, isShowingConnectGoodsTypeModal, targetPendingGoods, isShowingSpin } = this.state;
         const { pendingGoods: { loading, listData, brands, category, subCategory }, dispatch } = this.props;
         return (
             <PageHeaderLayout>
-                <Spin spinning={false} tip="自动关联中，请稍候。。。">
+                <Spin spinning={isShowingSpin} tip="自动关联中，请稍候。。。">
                     <Card bordered={false}>
                         <div className={styles.tableList}>
                             <div className={styles.tableListForm}>
                                 {this.renderForm()}
                             </div>
-                            {/* <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={this.handleAutoRelation}>
+                            <div className={styles.tableListOperator}>
+                                {/* <Button type="primary" onClick={this.handleAutoRelation}>
                                     relation by name
-                                </Button>
-                                <Button type="primary" onClick={this.handleAutoRelationByNumber}>
+                                </Button> */}
+                                <Button type="primary" onClick={this.handleAutoConnectByNumber}>
                                     relation by number
                                 </Button>
-                            </div> */}
+                            </div>
                             <PendingGoodsTable
                                 loading={loading}
                                 data={listData}

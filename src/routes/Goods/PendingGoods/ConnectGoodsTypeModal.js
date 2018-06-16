@@ -1,6 +1,8 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Row, List, Badge } from 'antd';
+import { Modal, Form, Input, Row, List, Tooltip, Badge } from 'antd';
+import Ellipsis from '../../../components/Ellipsis';
 import { IMG_SERVER } from '../../../config';
+import styles from '../../style.less';
 
 const FormItem = Form.Item;
 
@@ -97,21 +99,23 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                     grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
                     dataSource={goodsTypeListData.list}
                     renderItem={item => (
-                        <List.Item key={item._id}>
-                            <Badge dot={selectedGoodsTypeId === item._id}>
-                                <Row type="flex" justify="center">
-                                    <img
-                                        style={{ width: '120px', height: '120px' }}
-                                        alt={item.name}
-                                        src={`${IMG_SERVER}/${item.img}`}
-                                        onClick={() => this.handleGoodsTypeSelected(item._id)}
-                                    />
-                                </Row>
-                                <Row type="flex" justify="center">
-                                    {item.name}
-                                </Row>
-                            </Badge>
-                        </List.Item>
+                        <Tooltip title={item.name}>
+                            <List.Item key={item._id}>
+                                <Badge dot={selectedGoodsTypeId === item._id}>
+                                    <Row type="flex" justify="center">
+                                        <img
+                                            style={{ width: '120px', height: '120px' }}
+                                            alt={item.name}
+                                            src={`${IMG_SERVER}/${item.img}`}
+                                            onClick={() => this.handleGoodsTypeSelected(item._id)}
+                                        />
+                                    </Row>
+                                    <Row type="flex" justify="center">
+                                        <Ellipsis className={styles.item} lines={1}>{item.name}</Ellipsis>
+                                    </Row>
+                                </Badge>
+                            </List.Item>
+                        </Tooltip>
                     )}
                 />
             </Modal>

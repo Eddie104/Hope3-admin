@@ -20,3 +20,7 @@ export async function connectGoodsType(params) {
 export async function setCheck(_id) {
     return get(`${SERVER_URL}/admin/set_pending_goods_check/${_id}`);
 }
+
+export async function autoConnectByNumber() {
+    return get(`${SERVER_URL}/admin/auto_connect_by_number`);
+}
