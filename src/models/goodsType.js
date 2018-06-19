@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { find, detail, fetchSubCategory, update } from '../services/goodsType';
+import { find, detail, fetchSubCategory, update, merge } from '../services/goodsType';
 
 export default {
     namespace: 'goodsType',
@@ -94,6 +94,18 @@ export default {
                 payload: null,
             });
         },
+        *merge({ payload, callback }, { call, put }) {
+            const response = yield call(merge, payload);
+            if (response.success) {
+                yield put({
+                    type: 'mergeGoodsType',
+                    payload,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
     },
     reducers: {
         changeStyleListLoading(state, { payload }) {
@@ -162,6 +174,28 @@ export default {
             return {
                 ...state,
                 goodsColorArr,
+            };
+        },
+        mergeGoodsType(state, { payload }) {
+            const {
+                mergeTargetGoodsType,
+                goodsTypeArr,
+            } = payload;
+            const list = [...state.listData.list];
+            let i = list.length;
+            while (--i > -1) {
+                if (list[i]._id !== mergeTargetGoodsType) {
+                    if (goodsTypeArr.includes(list[i]._id)) {
+                        list.splice(i, 1);
+                    }
+                }
+            }
+            return {
+                ...state,
+                listData: {
+                    ...state.listData,
+                    list,
+                },
             };
         },
     },

@@ -4,7 +4,7 @@ import StandardTable from '../../../components/StandardTable';
 import { IMG_SERVER } from '../../../config';
 
 export default class GoodsTypeTable extends StandardTable {
-    createRowSelection = () => null;
+    // createRowSelection = () => null;
 
     createColumns = () => {
         return [

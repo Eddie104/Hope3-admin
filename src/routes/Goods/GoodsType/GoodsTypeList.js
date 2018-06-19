@@ -1,12 +1,13 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button } from 'antd';
+import { Row, Col, Card, Form, Input, Button, Alert, Modal, Radio } from 'antd';
 import GoodsTypeTable from './GoodsTypeTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 
 import styles from '../../style.less';
 
 const FormItem = Form.Item;
+const RadioGroup = Radio.Group;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 const FIELDS = {
@@ -20,6 +21,15 @@ const FIELDS = {
 }))
 @Form.create()
 export default class GoodsTypeList extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedRows: [],
+            mergeGoodsTypeModalVisible: false,
+            mergeTargetGoodsType: null,
+        };
+    }
+
     componentDidMount() {
         const { goodsType: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
@@ -84,6 +94,32 @@ export default class GoodsTypeList extends PureComponent {
         });
     }
 
+    handleSelectRows = (selectedRows) => {
+        this.setState({ selectedRows });
+    }
+
+    handleMergeSelectedGoodsType = () => {
+        this.setState({ mergeGoodsTypeModalVisible: true });
+    }
+
+    handleMergeGoodsType = () => {
+        const { mergeTargetGoodsType, selectedRows } = this.state;
+        this.props.dispatch({
+            type: 'goodsType/merge',
+            payload: {
+                mergeTargetGoodsType,
+                goodsTypeArr: selectedRows.map(item => item._id),
+            },
+            callback: () => {
+                this.setState({ mergeGoodsTypeModalVisible: false, selectedRows: [] });
+            },
+        });
+    }
+
+    handleMergeTargetGoodsTypeChange = ({ target: { value } }) => {
+        this.setState({ mergeTargetGoodsType: value });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator } } = this.props;
         return (
@@ -108,6 +144,7 @@ export default class GoodsTypeList extends PureComponent {
     }
 
     render() {
+        const { selectedRows, mergeGoodsTypeModalVisible } = this.state;
         const { goodsType: { loading, listData } } = this.props;
         return (
             <PageHeaderLayout>
@@ -116,23 +153,55 @@ export default class GoodsTypeList extends PureComponent {
                         <div className={styles.tableListForm}>
                             {this.renderForm()}
                         </div>
-                        {/* <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={this.handleAutoRelation}>
-                                    relation by name
-                                </Button>
-                                <Button type="primary" onClick={this.handleAutoRelationByNumber}>
-                                    relation by number
-                                </Button>
-                            </div> */}
+                        {
+                            selectedRows.length > 1 && (
+                                <div className={styles.tableAlert}>
+                                    <Alert
+                                        message={
+                                            <Fragment>
+                                                <a onClick={this.handleMergeSelectedGoodsType}>
+                                                    合并
+                                                </a>
+                                            </Fragment>
+                                        }
+                                        type="info"
+                                        showIcon
+                                    />
+                                </div>
+                            )
+                        }
                         <GoodsTypeTable
                             loading={loading}
                             data={listData}
                             onSelectRow={this.handleSelectRows}
                             onChange={this.handleStandardTableChange}
-                            // onNewGoodsType={this.handleNewGoodsType}
                         />
                     </div>
                 </Card>
+                <Modal
+                    title="合并款型"
+                    visible={mergeGoodsTypeModalVisible}
+                    onOk={this.handleMergeGoodsType}
+                    onCancel={() => { this.setState({ mergeGoodsTypeModalVisible: false }); }}
+                >
+                    <RadioGroup onChange={this.handleMergeTargetGoodsTypeChange} value={this.state.mergeTargetGoodsType}>
+                        {
+                            selectedRows.map(goodsType => (
+                                <Radio
+                                    key={goodsType.id}
+                                    style={{
+                                        display: 'block',
+                                        height: '30px',
+                                        lineHeight: '30px',
+                                    }}
+                                    value={goodsType._id}
+                                >
+                                    {goodsType.name}
+                                </Radio>
+                            ))
+                        }
+                    </RadioGroup>
+                </Modal>
             </PageHeaderLayout>
         );
     }

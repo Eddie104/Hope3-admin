@@ -20,3 +20,7 @@ export async function update(params) {
 export async function fetchSubCategory(categoryId) {
     return get(`${SERVER_URL}/admin/fetch_sub_category/${categoryId}`);
 }
+
+export async function merge(params) {
+    return post(`${SERVER_URL}/admin/merge_goods_type`, params);
+}
