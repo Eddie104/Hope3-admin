@@ -7,6 +7,7 @@ import {
     connectGoodsType,
     setCheck,
     autoConnectByNumber,
+    autoConnectByName,
 } from '../services/pendingGoods';
 import {
     fetchSubCategory,
@@ -139,6 +140,14 @@ export default {
         },
         *autoConnectByNumber({ callback }, { call }) {
             const response = yield call(autoConnectByNumber);
+            if (response.success) {
+                callback && callback(response.data);
+            } else {
+                message.error(response.data);
+            }
+        },
+        *autoConnectByName({ callback }, { call }) {
+            const response = yield call(autoConnectByName);
             if (response.success) {
                 callback && callback(response.data);
             } else {

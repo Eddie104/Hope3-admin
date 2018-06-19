@@ -171,6 +171,17 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleAutoConnectByName = () => {
+        this.setState({ isShowingSpin: true }, () => {
+            this.props.dispatch({
+                type: 'pendingGoods/autoConnectByName',
+                callback: () => {
+                    this.setState({ isShowingSpin: false });
+                },
+            });
+        });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
@@ -233,9 +244,9 @@ export default class PendingGoodsList extends PureComponent {
                                 {this.renderForm()}
                             </div>
                             <div className={styles.tableListOperator}>
-                                {/* <Button type="primary" onClick={this.handleAutoRelation}>
+                                <Button type="primary" onClick={this.handleAutoConnectByName}>
                                     relation by name
-                                </Button> */}
+                                </Button>
                                 <Button type="primary" onClick={this.handleAutoConnectByNumber}>
                                     relation by number
                                 </Button>

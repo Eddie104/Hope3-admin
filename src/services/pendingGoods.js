@@ -24,3 +24,7 @@ export async function setCheck(_id) {
 export async function autoConnectByNumber() {
     return get(`${SERVER_URL}/admin/auto_connect_by_number`);
 }
+
+export async function autoConnectByName() {
+    return get(`${SERVER_URL}/admin/auto_connect_by_name`);
+}
