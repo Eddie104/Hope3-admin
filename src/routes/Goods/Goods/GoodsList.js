@@ -12,6 +12,7 @@ const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 const FIELDS = {
     name: 1,
     id: 1,
+    url: 1,
 };
 
 @connect(state => ({

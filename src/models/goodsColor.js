@@ -5,6 +5,13 @@ export default {
     namespace: 'goodsColor',
     state: {
         detail: null,
+        goodsListData: {
+            list: [],
+            pagination: {
+                total: 0,
+                current: 0,
+            },
+        },
     },
     effects: {
         *detail({ payload, callback }, { call, put }) {
@@ -36,14 +43,23 @@ export default {
     reducers: {
         setDetail(state, { payload }) {
             if (payload) {
+                console.log(payload);
                 return {
                     ...state,
                     detail: payload.goodsColor,
+                    goodsListData: payload.goodsArr,
                 };
             }
             return {
                 ...state,
                 detail: null,
+                goodsListData: {
+                    list: [],
+                    pagination: {
+                        total: 0,
+                        current: 0,
+                    },
+                },
             };
         },
     },

@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
-import GoodsColorEditor from './GoodsColorEditor';
+// import GoodsColorEditor from './GoodsColorEditor';
 import { GENDER, IMG_SERVER } from '../../../config';
 import styles from '../../style.less';
 
@@ -19,8 +19,8 @@ export default class GoodsTypeEditor extends Component {
         super(props);
         this.state = {
             series: [],
-            isShowingGoodsColorEditor: false,
-            targetGoodsColorId: null,
+            // isShowingGoodsColorEditor: false,
+            // targetGoodsColorId: null,
         };
     }
 
@@ -105,39 +105,44 @@ export default class GoodsTypeEditor extends Component {
     }
 
     handleGoodsColorClick = (goodsColorId) => {
-        this.setState({
-            isShowingGoodsColorEditor: true,
-            targetGoodsColorId: goodsColorId,
-        });
-    }
-
-    handleGoodsColorEditorOK = (goodsColorData) => {
+        // this.setState({
+        //     isShowingGoodsColorEditor: true,
+        //     targetGoodsColorId: goodsColorId,
+        // });
         this.props.dispatch({
-            type: 'goodsColor/update',
-            payload: goodsColorData,
-            callback: () => {
-                this.setState({
-                    isShowingGoodsColorEditor: false,
-                    targetGoodsColorId: null,
-                }, () => {
-                    this.props.dispatch({
-                        type: 'goodsType/updateGoodsColor',
-                        payload: goodsColorData,
-                    });
-                });
-            },
+            type: 'goodsType/navToGoodsColor',
+            payload: goodsColorId,
         });
     }
 
-    handleGoodsColorEditorCancel = () => {
-        this.setState({
-            isShowingGoodsColorEditor: false,
-            targetGoodsColorId: null,
-        });
-    }
+    // handleGoodsColorEditorOK = (goodsColorData) => {
+    //     this.props.dispatch({
+    //         type: 'goodsColor/update',
+    //         payload: goodsColorData,
+    //         callback: () => {
+    //             this.setState({
+    //                 isShowingGoodsColorEditor: false,
+    //                 targetGoodsColorId: null,
+    //             }, () => {
+    //                 this.props.dispatch({
+    //                     type: 'goodsType/updateGoodsColor',
+    //                     payload: goodsColorData,
+    //                 });
+    //             });
+    //         },
+    //     });
+    // }
+
+    // handleGoodsColorEditorCancel = () => {
+    //     this.setState({
+    //         isShowingGoodsColorEditor: false,
+    //         targetGoodsColorId: null,
+    //     });
+    // }
 
     render() {
-        const { series, isShowingGoodsColorEditor, targetGoodsColorId } = this.state;
+        // const { series, isShowingGoodsColorEditor, targetGoodsColorId } = this.state;
+        const { series } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         return (
             <PageHeaderLayout>
@@ -256,14 +261,14 @@ export default class GoodsTypeEditor extends Component {
                         </Button>
                     </FooterToolbar>
                 </Card>
-                <GoodsColorEditor
+                {/* <GoodsColorEditor
                     visible={isShowingGoodsColorEditor}
                     goodsColorId={targetGoodsColorId}
                     dispatch={this.props.dispatch}
                     detail={this.props.goodsColor.detail}
                     handleOk={this.handleGoodsColorEditorOK}
                     handleCancel={this.handleGoodsColorEditorCancel}
-                />
+                /> */}
             </PageHeaderLayout>
         );
     }

@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { routerRedux } from 'dva/router';
 import { find, detail, fetchSubCategory, update, merge } from '../services/goodsType';
 
 export default {
@@ -105,6 +106,9 @@ export default {
             } else {
                 message.error(response.data);
             }
+        },
+        *navToGoodsColor({ payload }, { put }) {
+            yield put(routerRedux.push(`/goods/goods-color-editor/${payload}`));
         },
     },
     reducers: {

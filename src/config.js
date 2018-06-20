@@ -1,4 +1,4 @@
-// export const SERVER_URL = 'http://localhost:7001';
+// export const SERVER_URL = 'http://localhost:7002';
 export const SERVER_URL = 'http://47.100.164.90:7004';
 
 export const CLIENT_ID = 'hopeadmin';

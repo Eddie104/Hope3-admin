@@ -17,6 +17,11 @@ export default class GoodsTable extends StandardTable {
                 title: '名称',
                 dataIndex: 'name',
                 width: '250px',
+                render: (text, record) => (
+                    <a href={record.url} target="_blank">
+                        {text}
+                    </a>
+                ),
             },
             {
                 title: '图片',

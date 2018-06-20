@@ -98,6 +98,9 @@ export const getRouterData = (app) => {
         '/goods/goods-editor/:id': {
             component: dynamicWrapper(app, ['goods'], () => import('../routes/Goods/Goods/GoodsEditor')),
         },
+        '/goods/goods-color-editor/:id': {
+            component: dynamicWrapper(app, ['goodsColor'], () => import('../routes/Goods/GoodsColor/GoodsColorEditor')),
+        },
         '/goods/pending-goods-list': {
             component: dynamicWrapper(app, ['pendingGoods'], () => import('../routes/Goods/PendingGoods/PendingGoodsList')),
         },
