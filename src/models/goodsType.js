@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { find, detail, fetchSubCategory, update, merge } from '../services/goodsType';
+import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor } from '../services/goodsType';
 
 export default {
     namespace: 'goodsType',
@@ -107,6 +107,18 @@ export default {
                 message.error(response.data);
             }
         },
+        *mergeGoodsColor({ payload, callback }, { call, put }) {
+            const response = yield call(mergeGoodsColor, payload);
+            if (response.success) {
+                yield put({
+                    type: 'mergeGoodsColor',
+                    payload,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
         *navToGoodsColor({ payload }, { put }) {
             yield put(routerRedux.push(`/goods/goods-color-editor/${payload}`));
         },
@@ -200,6 +212,25 @@ export default {
                     ...state.listData,
                     list,
                 },
+            };
+        },
+        mergeGoodsColor(state, { payload }) {
+            const {
+                mergeTargetGoodsColor,
+                goodsColorArr,
+            } = payload;
+            const newGoodsColorArr = [...state.goodsColorArr];
+            let i = newGoodsColorArr.length;
+            while (--i > -1) {
+                if (newGoodsColorArr[i]._id !== mergeTargetGoodsColor) {
+                    if (goodsColorArr.includes(newGoodsColorArr[i]._id)) {
+                        newGoodsColorArr.splice(i, 1);
+                    }
+                }
+            }
+            return {
+                ...state,
+                goodsColorArr: newGoodsColorArr,
             };
         },
     },

@@ -24,3 +24,7 @@ export async function fetchSubCategory(categoryId) {
 export async function merge(params) {
     return post(`${SERVER_URL}/admin/merge_goods_type`, params);
 }
+
+export async function mergeGoodsColor(params) {
+    return post(`${SERVER_URL}/admin/merge_goods_color`, params);
+}

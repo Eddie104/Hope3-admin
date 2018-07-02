@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message } from 'antd';
+import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
 // import GoodsColorEditor from './GoodsColorEditor';
@@ -8,6 +8,7 @@ import { GENDER, IMG_SERVER } from '../../../config';
 import styles from '../../style.less';
 
 const { Option } = Select;
+const RadioGroup = Radio.Group;
 
 @connect(state => ({
     goodsType: state.goodsType,
@@ -21,6 +22,9 @@ export default class GoodsTypeEditor extends Component {
             series: [],
             // isShowingGoodsColorEditor: false,
             // targetGoodsColorId: null,
+            mergeGoodsColorModalVisible: false,
+            selectedGoodsColor: [],
+            mergeTargetGoodsColor: null,
         };
     }
 
@@ -115,6 +119,19 @@ export default class GoodsTypeEditor extends Component {
         });
     }
 
+    handleGoodsColorCheckboxChange = (goodsColor, isChecked) => {
+        const selectedGoodsColor = [...this.state.selectedGoodsColor];
+        const index = selectedGoodsColor.indexOf(goodsColor);
+        if (isChecked) {
+            if (index === -1) {
+                selectedGoodsColor.push(goodsColor);
+            }
+        } else if (index !== -1) {
+            selectedGoodsColor.splice(index, 1);
+        }
+        this.setState({ selectedGoodsColor });
+    }
+
     // handleGoodsColorEditorOK = (goodsColorData) => {
     //     this.props.dispatch({
     //         type: 'goodsColor/update',
@@ -140,9 +157,31 @@ export default class GoodsTypeEditor extends Component {
     //     });
     // }
 
+    handleMergeSelectedGoodsColor = () => {
+        this.setState({ mergeGoodsColorModalVisible: true });
+    }
+
+    handleMergeTargetGoodsColorChange = ({ target: { value } }) => {
+        this.setState({ mergeTargetGoodsColor: value });
+    }
+
+    handleMergeGoodsColor = () => {
+        const { mergeTargetGoodsColor, selectedGoodsColor } = this.state;
+        this.props.dispatch({
+            type: 'goodsType/mergeGoodsColor',
+            payload: {
+                mergeTargetGoodsColor,
+                goodsColorArr: selectedGoodsColor.map(item => item._id),
+            },
+            callback: () => {
+                this.setState({ mergeGoodsColorModalVisible: false, selectedGoodsColor: [] });
+            },
+        });
+    }
+
     render() {
         // const { series, isShowingGoodsColorEditor, targetGoodsColorId } = this.state;
-        const { series } = this.state;
+        const { series, mergeGoodsColorModalVisible, selectedGoodsColor } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         return (
             <PageHeaderLayout>
@@ -228,18 +267,25 @@ export default class GoodsTypeEditor extends Component {
                         </Row>
                     </Form>
                     <Divider>配色信息</Divider>
+                    <Button type="primary" style={{ marginBottom: '12px' }} onClick={this.handleMergeSelectedGoodsColor}>
+                        合并配色
+                    </Button>
                     <List
                         rowKey="id"
                         grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
                         dataSource={['', ...goodsColorArr]}
                         renderItem={item =>
                             (item ? (
-                                <List.Item key={item.id} onClick={() => this.handleGoodsColorClick(item._id)}>
-                                    <Row type="flex" justify="center">
+                                <List.Item key={item._id}>
+                                    <Row type="flex" justify="center" onClick={() => this.handleGoodsColorClick(item._id)}>
                                         <img style={{ width: '120px', height: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
                                     </Row>
                                     <Row type="flex" justify="center">
-                                        {item.color_name || 'no name'}
+                                        <Checkbox
+                                            onChange={({ target: { checked } }) => this.handleGoodsColorCheckboxChange(item, checked)}
+                                        >
+                                            {item.color_name || 'no name'}
+                                        </Checkbox>
                                     </Row>
                                 </List.Item>
                             ) : (
@@ -269,6 +315,30 @@ export default class GoodsTypeEditor extends Component {
                     handleOk={this.handleGoodsColorEditorOK}
                     handleCancel={this.handleGoodsColorEditorCancel}
                 /> */}
+                <Modal
+                    title="合并配色"
+                    visible={mergeGoodsColorModalVisible}
+                    onOk={this.handleMergeGoodsColor}
+                    onCancel={() => { this.setState({ mergeGoodsColorModalVisible: false }); }}
+                >
+                    <RadioGroup onChange={this.handleMergeTargetGoodsColorChange} value={this.state.mergeTargetGoodsColor}>
+                        {
+                            selectedGoodsColor.map(goodsColor => (
+                                <Radio
+                                    key={goodsColor.id}
+                                    style={{
+                                        display: 'block',
+                                        height: '30px',
+                                        lineHeight: '30px',
+                                    }}
+                                    value={goodsColor._id}
+                                >
+                                    {goodsColor.color_name}
+                                </Radio>
+                            ))
+                        }
+                    </RadioGroup>
+                </Modal>
             </PageHeaderLayout>
         );
     }
