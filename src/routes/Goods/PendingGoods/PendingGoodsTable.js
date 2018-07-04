@@ -29,7 +29,7 @@ export default class PendingGoodsTable extends StandardTable {
             },
             {
                 title: '操作',
-                width: '180px',
+                width: '270px',
                 render: (text, record) => (
                     record.is_checked ? (
                         '已处理'
@@ -42,6 +42,12 @@ export default class PendingGoodsTable extends StandardTable {
                                 !record.has_same_goods_type_name && <Divider type="vertical" />
                             }
                             <a onClick={() => this.props.onConnectGoodsType(record)}>关联款型</a>
+                            {
+                                !record.is_deleted && <Divider type="vertical" />
+                            }
+                            {
+                                !record.is_deleted && <a onClick={() => this.props.onDeletePendingGoods(record)}>丢垃圾桶</a>
+                            }
                         </div>
                     )
                 ),

@@ -8,6 +8,7 @@ import {
     setCheck,
     autoConnectByNumber,
     autoConnectByName,
+    deletePendingGoods,
 } from '../services/pendingGoods';
 import {
     fetchSubCategory,
@@ -24,6 +25,7 @@ export default {
         findFormValue: {
             name: '',
             only_pending: false,
+            is_deleted: 0,
             platform: 'all',
         },
         listData: {
@@ -48,6 +50,14 @@ export default {
                 },
             });
         },
+        *setFormValueIs({ payload }, { put }) {
+            yield put({
+                type: 'createFindFormValue',
+                payload: {
+                    is_deleted: payload.is_deleted,
+                },
+            });
+        },
         *find({ payload }, { call, put }) {
             yield put({
                 type: 'changeStyleListLoading',
@@ -58,6 +68,7 @@ export default {
                 payload: {
                     name: payload.name,
                     only_pending: payload.only_pending,
+                    is_deleted: payload.is_deleted,
                     platform: payload.platform,
                 },
             });
@@ -154,6 +165,18 @@ export default {
                 message.error(response.data);
             }
         },
+        *delete({ payload, callback }, { call, put }) {
+            const response = yield call(deletePendingGoods, payload);
+            if (response.success) {
+                yield put({
+                    type: 'setDeleted',
+                    payload,
+                });
+                callback && callback(response.data);
+            } else {
+                message.error(response.data);
+            }
+        },
     },
 
     reducers: {
@@ -203,6 +226,22 @@ export default {
             for (let i = 0; i < list.length; i += 1) {
                 if (list[i]._id === payload) {
                     list[i].is_checked = true;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                listData: {
+                    ...state.listData,
+                    list,
+                },
+            };
+        },
+        setDeleted(state, { payload }) {
+            const list = [...state.listData.list];
+            for (let i = 0; i < list.length; i += 1) {
+                if (list[i]._id === payload) {
+                    list[i].is_deleted = true;
                     break;
                 }
             }

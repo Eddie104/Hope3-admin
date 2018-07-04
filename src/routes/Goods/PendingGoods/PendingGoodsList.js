@@ -39,6 +39,7 @@ export default class PendingGoodsList extends PureComponent {
         setFieldsValue({
             name: findFormValue.name,
             only_pending: findFormValue.only_pending,
+            is_deleted: findFormValue.is_deleted,
         });
         this.handleSearch();
     }
@@ -82,6 +83,15 @@ export default class PendingGoodsList extends PureComponent {
             type: 'pendingGoods/setFormValueOnlyPending',
             payload: {
                 only_pending: checked,
+            },
+        });
+    }
+
+    handleIsDelected = (val) => {
+        this.props.dispatch({
+            type: 'pendingGoods/setFormValueIs',
+            payload: {
+                is_deleted: val,
             },
         });
     }
@@ -182,6 +192,13 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleDeletePendingGoods = (pendingGoods) => {
+        this.props.dispatch({
+            type: 'pendingGoods/delete',
+            payload: pendingGoods._id,
+        });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
@@ -214,14 +231,31 @@ export default class PendingGoodsList extends PureComponent {
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={6} sm={24}>
+                    <Col md={4} sm={24}>
                         <FormItem label="只显示未处理商品">
                             {getFieldDecorator('only_pending')(
                                 <MyCheckbox onChange={this.handleOnlyPendingChange} />
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={6} sm={24}>
+                    <Col md={4} sm={24}>
+                        <FormItem>
+                            {getFieldDecorator('is_deleted')(
+                                <Select onChange={this.handleIsDelected}>
+                                    <Option value={0}>
+                                        所有商品
+                                    </Option>
+                                    <Option value={1}>
+                                        垃圾商品
+                                    </Option>
+                                    <Option value={2}>
+                                        非垃圾商品
+                                    </Option>
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col md={4} sm={24}>
                         <span className={styles.submitButtons}>
                             <Button type="primary" htmlType="submit">查询</Button>
                             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
@@ -258,6 +292,7 @@ export default class PendingGoodsList extends PureComponent {
                                 onChange={this.handleStandardTableChange}
                                 onNewGoodsType={this.handleNewGoodsType}
                                 onConnectGoodsType={this.handleConnectGoodsType}
+                                onDeletePendingGoods={this.handleDeletePendingGoods}
                             />
                         </div>
                     </Card>

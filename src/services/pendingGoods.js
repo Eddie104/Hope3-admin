@@ -28,3 +28,7 @@ export async function autoConnectByNumber() {
 export async function autoConnectByName() {
     return get(`${SERVER_URL}/admin/auto_connect_by_name`);
 }
+
+export async function deletePendingGoods(_id) {
+    return get(`${SERVER_URL}/admin/delete_pending_goods/${_id}`);
+}
