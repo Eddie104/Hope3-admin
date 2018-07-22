@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio } from 'antd';
+import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio, Popconfirm } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
-// import GoodsColorEditor from './GoodsColorEditor';
 import { GENDER, IMG_SERVER } from '../../../config';
 import styles from '../../style.less';
 
@@ -20,8 +19,6 @@ export default class GoodsTypeEditor extends Component {
         super(props);
         this.state = {
             series: [],
-            // isShowingGoodsColorEditor: false,
-            // targetGoodsColorId: null,
             mergeGoodsColorModalVisible: false,
             selectedGoodsColor: [],
             mergeTargetGoodsColor: null,
@@ -109,10 +106,6 @@ export default class GoodsTypeEditor extends Component {
     }
 
     handleGoodsColorClick = (goodsColorId) => {
-        // this.setState({
-        //     isShowingGoodsColorEditor: true,
-        //     targetGoodsColorId: goodsColorId,
-        // });
         this.props.dispatch({
             type: 'goodsType/navToGoodsColor',
             payload: goodsColorId,
@@ -131,31 +124,6 @@ export default class GoodsTypeEditor extends Component {
         }
         this.setState({ selectedGoodsColor });
     }
-
-    // handleGoodsColorEditorOK = (goodsColorData) => {
-    //     this.props.dispatch({
-    //         type: 'goodsColor/update',
-    //         payload: goodsColorData,
-    //         callback: () => {
-    //             this.setState({
-    //                 isShowingGoodsColorEditor: false,
-    //                 targetGoodsColorId: null,
-    //             }, () => {
-    //                 this.props.dispatch({
-    //                     type: 'goodsType/updateGoodsColor',
-    //                     payload: goodsColorData,
-    //                 });
-    //             });
-    //         },
-    //     });
-    // }
-
-    // handleGoodsColorEditorCancel = () => {
-    //     this.setState({
-    //         isShowingGoodsColorEditor: false,
-    //         targetGoodsColorId: null,
-    //     });
-    // }
 
     handleMergeSelectedGoodsColor = () => {
         this.setState({ mergeGoodsColorModalVisible: true });
@@ -179,8 +147,18 @@ export default class GoodsTypeEditor extends Component {
         });
     }
 
+    handleRemoveGoodsColor = (goodsColorId) => {
+        const { goodsType: { detail } } = this.props;
+        this.props.dispatch({
+            type: 'goodsType/removeGoodsColor',
+            payload: {
+                id: detail._id,
+                goodsColorId,
+            },
+        });
+    }
+
     render() {
-        // const { series, isShowingGoodsColorEditor, targetGoodsColorId } = this.state;
         const { series, mergeGoodsColorModalVisible, selectedGoodsColor } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         return (
@@ -287,6 +265,11 @@ export default class GoodsTypeEditor extends Component {
                                             {item.color_name || 'no name'}
                                         </Checkbox>
                                     </Row>
+                                    <Row type="flex" justify="center">
+                                        <Popconfirm title="是否要删除配色数据？" onConfirm={() => this.handleRemoveGoodsColor(item._id)}>
+                                            <Button type="danger">删除</Button>
+                                        </Popconfirm>
+                                    </Row>
                                 </List.Item>
                             ) : (
                                 <List.Item>
@@ -307,14 +290,6 @@ export default class GoodsTypeEditor extends Component {
                         </Button>
                     </FooterToolbar>
                 </Card>
-                {/* <GoodsColorEditor
-                    visible={isShowingGoodsColorEditor}
-                    goodsColorId={targetGoodsColorId}
-                    dispatch={this.props.dispatch}
-                    detail={this.props.goodsColor.detail}
-                    handleOk={this.handleGoodsColorEditorOK}
-                    handleCancel={this.handleGoodsColorEditorCancel}
-                /> */}
                 <Modal
                     title="合并配色"
                     visible={mergeGoodsColorModalVisible}

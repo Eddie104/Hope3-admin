@@ -28,3 +28,7 @@ export async function merge(params) {
 export async function mergeGoodsColor(params) {
     return post(`${SERVER_URL}/admin/merge_goods_color`, params);
 }
+
+export async function removeGoodsColor(id, goodsColorId) {
+    return get(`${SERVER_URL}/admin/remove_goods_color/${id}/${goodsColorId}`);
+}

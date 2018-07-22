@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor } from '../services/goodsType';
+import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor, removeGoodsColor } from '../services/goodsType';
 
 export default {
     namespace: 'goodsType',
@@ -122,6 +122,19 @@ export default {
         *navToGoodsColor({ payload }, { put }) {
             yield put(routerRedux.push(`/goods/goods-color-editor/${payload}`));
         },
+        *removeGoodsColor({ payload, callback }, { call, put }) {
+            const response = yield call(removeGoodsColor, payload.id, payload.goodsColorId);
+            if (response.success) {
+                yield put({
+                    type: 'removeGoodsColorById',
+                    payload: payload.goodsColorId,
+                });
+                message.success('删除成功');
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
     },
     reducers: {
         changeStyleListLoading(state, { payload }) {
@@ -231,6 +244,19 @@ export default {
             return {
                 ...state,
                 goodsColorArr: newGoodsColorArr,
+            };
+        },
+        removeGoodsColorById(state, { payload }) {
+            const goodsColorArr = [...state.goodsColorArr];
+            for (let i = 0; i < goodsColorArr.length; i++) {
+                if (goodsColorArr[i]._id === payload) {
+                    goodsColorArr.splice(i, 1);
+                    break;
+                }
+            }
+            return {
+                ...state,
+                goodsColorArr,
             };
         },
     },
