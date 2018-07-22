@@ -91,6 +91,17 @@ export default class GoodsColorEditor extends Component {
         });
     }
 
+    handleRemoveGoods = (goodsId) => {
+        const { goodsColor: { detail } } = this.props;
+        this.props.dispatch({
+            type: 'goodsColor/removeGoods',
+            payload: {
+                _id: detail._id,
+                goods_id: goodsId,
+            },
+        });
+    }
+
     render() {
         const { isSubmiting } = this.state;
         const { form: { getFieldDecorator }, goodsColor: { detail, goodsListData } } = this.props;
@@ -144,7 +155,8 @@ export default class GoodsColorEditor extends Component {
                     <GoodsTable
                         loading={false}
                         data={goodsListData}
-                        // onSelectRow={this.handleSelectRows}
+                        from="goodsColorEditor"
+                        onRemoveGoods={this.handleRemoveGoods}
                         onChange={this.handleStandardTableChange}
                     />
                     {/* <Divider>SKU</Divider>

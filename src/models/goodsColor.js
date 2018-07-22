@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { detail, update } from '../services/goodsColor';
+import { detail, update, removeGoods } from '../services/goodsColor';
 
 export default {
     namespace: 'goodsColor',
@@ -39,6 +39,19 @@ export default {
                 payload: null,
             });
         },
+        *removeGoods({ payload, callback }, { call, put }) {
+            const response = yield call(removeGoods, payload._id, payload.goods_id);
+            if (response.success) {
+                yield put({
+                    type: 'rmeoveGoodsById',
+                    payload: payload.goods_id,
+                });
+                callback && callback();
+                message.success('删除成功');
+            } else {
+                message.error(response.data);
+            }
+        },
     },
     reducers: {
         setDetail(state, { payload }) {
@@ -59,6 +72,21 @@ export default {
                         total: 0,
                         current: 0,
                     },
+                },
+            };
+        },
+        rmeoveGoodsById(state, { payload }) {
+            const list = [...state.goodsListData.list];
+            for (let i = 0; i < list.length; i++) {
+                if (list[i]._id === payload) {
+                    list.splice(i, 1);
+                }
+            }
+            return {
+                ...state,
+                goodsListData: {
+                    list,
+                    pagination: { ...state.goodsListData.pagination },
                 },
             };
         },
