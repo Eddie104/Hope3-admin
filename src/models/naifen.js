@@ -1,7 +1,4 @@
-// import { routerRedux } from 'dva/router';
-// import { message } from 'antd';
 import { find } from '../services/naifen';
-// import { getItemFromArr } from '../utils/utils';
 
 export default {
     namespace: 'naifen',
