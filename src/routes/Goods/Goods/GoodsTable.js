@@ -20,7 +20,7 @@ export default class GoodsTable extends StandardTable {
                 dataIndex: 'name',
                 width: '250px',
                 render: (text, record) => (
-                    <a href={record.url} target="_blank">
+                    <a href={record.url} target="_blank" rel="noopener noreferrer">
                         {text}
                     </a>
                 ),
@@ -29,6 +29,22 @@ export default class GoodsTable extends StandardTable {
                 title: '图片',
                 render: (text, record) => (
                     <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.img}`} />
+                ),
+            },
+            {
+                title: '款型名称',
+                dataIndex: 'goodsTypeName',
+                width: '250px',
+                render: (text, record) => (
+                    <Link to={`/goods/goods-type-editor/${record.goods_type_id}?goods_color_id=${record.goods_color_id}`}>
+                        { text }
+                    </Link>
+                ),
+            },
+            {
+                title: '款型图片',
+                render: (text, record) => (
+                    <img style={{ width: '130px' }} alt={record.goodsTypeName} src={`${IMG_SERVER}/${record.goodsTypeImg}`} />
                 ),
             },
             from === 'goodsColorEditor' ? {

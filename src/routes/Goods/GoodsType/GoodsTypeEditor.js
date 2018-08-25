@@ -22,11 +22,24 @@ export default class GoodsTypeEditor extends Component {
             mergeGoodsColorModalVisible: false,
             selectedGoodsColor: [],
             mergeTargetGoodsColor: null,
+            targetGoodsColorId: null,
         };
     }
 
     componentDidMount() {
-        const { dispatch, match: { params: { id } } } = this.props;
+        const { dispatch, match: { params: { id } }, location: { search } } = this.props;
+        let targetGoodsColorId = null;
+        if (search) {
+            // ?goods_color_id=5aadc2c69574fa6b67813740
+            const queryArr = search.replace('?', '').split('&');
+            let query = null;
+            for (let i = 0; i < queryArr.length; i++) {
+                query = queryArr[i].split('=');
+                if (query[0] === 'goods_color_id') {
+                    targetGoodsColorId = query[1];
+                }
+            }
+        }
         dispatch({
             type: 'goodsType/detail',
             payload: id,
@@ -40,13 +53,21 @@ export default class GoodsTypeEditor extends Component {
                     category: detail.category,
                     sub_category: detail.sub_category,
                 });
+                let setedState = false;
                 for (let i = 0; i < brands.length; i += 1) {
                     if (brands[i]._id === detail.brand) {
+                        setedState = true;
                         this.setState({
                             series: brands[i].series,
+                            targetGoodsColorId,
                         });
                         break;
                     }
+                }
+                if (!setedState) {
+                    this.setState({
+                        targetGoodsColorId,
+                    });
                 }
                 this.handleCategoryChange(detail.category);
             },
@@ -159,7 +180,7 @@ export default class GoodsTypeEditor extends Component {
     }
 
     render() {
-        const { series, mergeGoodsColorModalVisible, selectedGoodsColor } = this.state;
+        const { series, mergeGoodsColorModalVisible, selectedGoodsColor, targetGoodsColorId } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         return (
             <PageHeaderLayout>
@@ -257,6 +278,9 @@ export default class GoodsTypeEditor extends Component {
                                 <List.Item key={item._id}>
                                     <Row type="flex" justify="center" onClick={() => this.handleGoodsColorClick(item._id)}>
                                         <img style={{ width: '120px', height: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
+                                        {
+                                            item._id === targetGoodsColorId && <Icon type="smile" />
+                                        }
                                     </Row>
                                     <Row type="flex" justify="center">
                                         <Checkbox

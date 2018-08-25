@@ -1,5 +1,6 @@
 import { message } from 'antd';
 import { find, detail, update } from '../services/goods';
+import { getItemFromArr } from '../utils/utils';
 
 export default {
     namespace: 'goods',
@@ -89,10 +90,21 @@ export default {
             };
         },
         setListData(state, { payload }) {
+            console.log(payload);
+            const { goodsTypeArr, list, pagination } = payload;
+            let goodsType = null;
+            for (let i = 0; i < list.length; i++) {
+                goodsType = getItemFromArr(goodsTypeArr, '_id', list[i].goods_type_id);
+                if (goodsType) {
+                    list[i].goodsTypeName = goodsType.name;
+                    list[i].goodsTypeImg = goodsType.img;
+                }
+            }
             return {
                 ...state,
                 listData: {
-                    ...payload,
+                    list,
+                    pagination,
                 },
             };
         },
