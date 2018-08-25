@@ -36,7 +36,7 @@ export default class GoodsTable extends StandardTable {
                 dataIndex: 'goodsTypeName',
                 width: '250px',
                 render: (text, record) => (
-                    <Link to={`/goods/goods-type-editor/${record.goods_type_id}?goods_color_id=${record.goods_color_id}`}>
+                    <Link target="_blank" rel="noopener noreferrer" to={`/goods/goods-type-editor/${record.goods_type_id}?goods_color_id=${record.goods_color_id}`}>
                         { text }
                     </Link>
                 ),
