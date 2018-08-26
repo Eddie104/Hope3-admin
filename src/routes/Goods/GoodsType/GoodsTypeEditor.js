@@ -275,7 +275,11 @@ export default class GoodsTypeEditor extends Component {
                         dataSource={['', ...goodsColorArr]}
                         renderItem={item =>
                             (item ? (
-                                <List.Item key={item._id}>
+                                <List.Item
+                                    key={item._id}
+                                    style={{ width: '120px', height: '240px' }}
+                                >
+                                    { item.number.join('\n') }
                                     <Row type="flex" justify="center" onClick={() => this.handleGoodsColorClick(item._id)}>
                                         <img style={{ width: '120px', height: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
                                         {
@@ -300,7 +304,7 @@ export default class GoodsTypeEditor extends Component {
                                     <Button
                                         type="dashed"
                                         className={styles.newButton}
-                                        style={{ width: '120px', height: '120px' }}
+                                        style={{ width: '120px', height: '240px' }}
                                     >
                                         <Icon type="plus" /> 新增配色
                                     </Button>
