@@ -8,6 +8,11 @@ export default {
         loading: false,
         findFormValue: {
             name: null,
+            gender: -1,
+            category: -1,
+            subCategory: -1,
+            brand: -1,
+            series: -1,
         },
         listData: {
             list: [],
@@ -32,6 +37,11 @@ export default {
                 type: 'createFindFormValue',
                 payload: {
                     name: payload.name,
+                    gender: payload.gender,
+                    category: payload.category,
+                    subCategory: payload.subCategory,
+                    brand: payload.brand,
+                    series: payload.series,
                 },
             });
             if (payload.resetFormValue) {
@@ -155,8 +165,10 @@ export default {
             return {
                 ...state,
                 listData: {
-                    ...payload,
+                    ...payload.listData,
                 },
+                category: payload.category,
+                brands: payload.brands,
             };
         },
         resetedFormValue(state) {
@@ -164,6 +176,11 @@ export default {
                 ...state,
                 findFormValue: {
                     name: null,
+                    gender: -1,
+                    category: -1,
+                    subCategory: -1,
+                    brand: -1,
+                    series: -1,
                 },
             };
         },

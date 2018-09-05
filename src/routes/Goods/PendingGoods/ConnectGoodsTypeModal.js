@@ -38,8 +38,8 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                 count: 12,
                 fields: { _id: 1, name: 1, img: 1 },
             },
-            callback: (goodsTypeListData) => {
-                this.setState({ goodsTypeListData });
+            callback: ({ listData }) => {
+                this.setState({ goodsTypeListData: listData });
             },
         });
     }
@@ -61,8 +61,8 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                 count: pageSize,
                 fields: { _id: 1, name: 1, img: 1 },
             },
-            callback: (goodsTypeListData) => {
-                this.setState({ goodsTypeListData });
+            callback: ({ listData }) => {
+                this.setState({ goodsTypeListData: listData });
             },
         });
     }

@@ -1,13 +1,15 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button, Alert, Modal, Radio } from 'antd';
+import { Row, Col, Card, Form, Input, Button, Alert, Modal, Radio, Select } from 'antd';
 import GoodsTypeTable from './GoodsTypeTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
+import { GENDER } from '../../../config';
 
 import styles from '../../style.less';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const { Option } = Select;
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
 
 const FIELDS = {
@@ -27,6 +29,7 @@ export default class GoodsTypeList extends PureComponent {
             selectedRows: [],
             mergeGoodsTypeModalVisible: false,
             mergeTargetGoodsType: null,
+            series: [],
         };
     }
 
@@ -34,6 +37,11 @@ export default class GoodsTypeList extends PureComponent {
         const { goodsType: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
             name: findFormValue.name,
+            gender: findFormValue.gender,
+            category: findFormValue.category,
+            subCategory: findFormValue.subCategory,
+            brand: findFormValue.brand,
+            series: findFormValue.series,
         });
         this.handleSearch();
     }
@@ -120,19 +128,134 @@ export default class GoodsTypeList extends PureComponent {
         this.setState({ mergeTargetGoodsType: value });
     }
 
+    handleCategoryChange = (value) => {
+        // 根据主分类获取次分类
+        this.props.dispatch({
+            type: 'goodsType/fetchSubCategory',
+            payload: value,
+        });
+    }
+
+    handleBrandChange = (value) => {
+        const { goodsType: { brands } } = this.props;
+        let targetBrand = null;
+        for (let i = 0; i < brands.length; i += 1) {
+            if (brands[i]._id === value) {
+                targetBrand = brands[i];
+                break;
+            }
+        }
+        if (targetBrand) {
+            this.setState({
+                series: targetBrand.series,
+            });
+            const { form: { setFieldsValue } } = this.props;
+            setFieldsValue({
+                series: -1,
+            });
+        }
+    }
+
     renderForm() {
-        const { form: { getFieldDecorator } } = this.props;
+        const { series } = this.state;
+        const { form: { getFieldDecorator }, goodsType: { category, subCategory, brands } } = this.props;
         return (
             <Form onSubmit={this.handleSearch} layout="inline">
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                    <Col md={18} sm={24}>
-                        <FormItem label="款型名称">
+                    <Col span={6}>
+                        <FormItem label="分类">
+                            {getFieldDecorator('category')(
+                                <Select style={{ width: '100%' }} onChange={this.handleCategoryChange}>
+                                    <Option value={-1} key={-1}>
+                                        所有
+                                    </Option>
+                                    {
+                                        category.map((c, i) => (
+                                            <Option key={i} value={c._id}>{c.name}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <FormItem label="子分类">
+                            {getFieldDecorator('subCategory')(
+                                <Select style={{ width: '100%' }}>
+                                    <Option value={-1} key={-1}>
+                                        所有
+                                    </Option>
+                                    {
+                                        subCategory.map((c, i) => (
+                                            <Option value={c._id} key={i}>
+                                                { c.name }
+                                            </Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <FormItem label="品牌">
+                            {getFieldDecorator('brand')(
+                                <Select style={{ width: '100%' }} onChange={this.handleBrandChange}>
+                                    <Option value={-1} key={-1}>
+                                        所有
+                                    </Option>
+                                    {
+                                        brands.map(brand => (
+                                            <Option key={brand._id} value={brand._id}>{brand.name}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <Form.Item label="系列">
+                            {getFieldDecorator('series')(
+                                <Select style={{ width: '100%' }}>
+                                    <Option value={-1} key={-1}>
+                                        所有
+                                    </Option>
+                                    {
+                                        series.map(seriesItem => (
+                                            <Option key={seriesItem._id} value={seriesItem._id}>{seriesItem.name}</Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </Form.Item>
+                    </Col>
+                </Row>
+                <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                    <Col span={12}>
+                        <FormItem label="名称">
                             {getFieldDecorator('name')(
                                 <Input placeholder="请输入款型名称" />
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={6} sm={24}>
+                    <Col span={6}>
+                        <FormItem label="性别">
+                            {getFieldDecorator('gender')(
+                                <Select style={{ width: '100%' }}>
+                                    <Option value={-1} key={-1}>
+                                        所有
+                                    </Option>
+                                    {
+                                        GENDER.map((g, i) => (
+                                            <Option value={i} key={i}>
+                                                { g }
+                                            </Option>
+                                        ))
+                                    }
+                                </Select>
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
                         <span className={styles.submitButtons}>
                             <Button type="primary" htmlType="submit">查询</Button>
                             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
