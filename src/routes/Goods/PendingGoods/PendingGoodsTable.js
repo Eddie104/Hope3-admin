@@ -1,7 +1,7 @@
 import React from 'react';
 import { Divider } from 'antd';
 import StandardTable from '../../../components/StandardTable';
-import { IMG_SERVER } from '../../../config';
+import { IMG_SERVER, GENDER } from '../../../config';
 
 export default class PendingGoodsTable extends StandardTable {
     createRowSelection = () => null;
@@ -25,6 +25,14 @@ export default class PendingGoodsTable extends StandardTable {
                 title: '图片',
                 render: (text, record) => (
                     <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.platform}/${record.imgs[0]}`} />
+                ),
+            },
+            {
+                title: '性别',
+                dataIndex: 'gender',
+                width: '100px',
+                render: (text, record) => (
+                    <p>{ record.gender >= 0 ? GENDER[record.gender] : '未知' }</p>
                 ),
             },
             {
