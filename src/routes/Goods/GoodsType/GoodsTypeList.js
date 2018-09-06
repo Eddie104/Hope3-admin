@@ -169,6 +169,9 @@ export default class GoodsTypeList extends PureComponent {
                                     <Option value={-1} key={-1}>
                                         所有
                                     </Option>
+                                    <Option value={0} key={0}>
+                                        未设置
+                                    </Option>
                                     {
                                         category.map((c, i) => (
                                             <Option key={i} value={c._id}>{c.name}</Option>
@@ -184,6 +187,9 @@ export default class GoodsTypeList extends PureComponent {
                                 <Select style={{ width: '100%' }}>
                                     <Option value={-1} key={-1}>
                                         所有
+                                    </Option>
+                                    <Option value={0} key={0}>
+                                        未设置
                                     </Option>
                                     {
                                         subCategory.map((c, i) => (
@@ -203,6 +209,9 @@ export default class GoodsTypeList extends PureComponent {
                                     <Option value={-1} key={-1}>
                                         所有
                                     </Option>
+                                    <Option value={0} key={0}>
+                                        未设置
+                                    </Option>
                                     {
                                         brands.map(brand => (
                                             <Option key={brand._id} value={brand._id}>{brand.name}</Option>
@@ -218,6 +227,9 @@ export default class GoodsTypeList extends PureComponent {
                                 <Select style={{ width: '100%' }}>
                                     <Option value={-1} key={-1}>
                                         所有
+                                    </Option>
+                                    <Option value={0} key={0}>
+                                        未设置
                                     </Option>
                                     {
                                         series.map(seriesItem => (
