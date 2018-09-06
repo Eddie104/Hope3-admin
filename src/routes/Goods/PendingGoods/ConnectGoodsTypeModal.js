@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
-import { Modal, Form, Input, Row, List, Tooltip, Badge, Pagination } from 'antd';
+import { Modal, Form, Input, Row, List, Tooltip, Badge, Pagination, Select, Col } from 'antd';
 import Ellipsis from '../../../components/Ellipsis';
-import { IMG_SERVER } from '../../../config';
+import { IMG_SERVER, GENDER } from '../../../config';
 import styles from '../../style.less';
 
 const FormItem = Form.Item;
+const { Option } = Select;
 
 export default class ConnectGoodsTypeModal extends PureComponent {
     constructor(props) {
@@ -13,6 +14,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
             visible: !!props.visible,
             pendingGoods: props.pendingGoods,
             goodsTypeNameKeyWord: '',
+            goodsTypeGender: 0,
             goodsTypeListData: props.goodsTypeListData || { pagination: 1, total: 1 },
             selectedGoodsTypeId: 0,
         };
@@ -34,6 +36,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
             type: 'pendingGoods/findGoodsType',
             payload: {
                 name: this.state.goodsTypeNameKeyWord,
+                gender: this.state.goodsTypeGender,
                 page: 1,
                 count: 12,
                 fields: { _id: 1, name: 1, img: 1 },
@@ -52,11 +55,20 @@ export default class ConnectGoodsTypeModal extends PureComponent {
         });
     }
 
+    handleGoodsTypeGenderChange = (value) => {
+        this.setState({
+            goodsTypeGender: value,
+        }, () => {
+            this.fetchGoodsType();
+        });
+    }
+
     handleGoodsTypePageChange = (current, pageSize) => {
         this.props.dispatch({
             type: 'pendingGoods/findGoodsType',
             payload: {
                 name: this.state.goodsTypeNameKeyWord,
+                gender: this.state.goodsTypeGender,
                 page: current,
                 count: pageSize,
                 fields: { _id: 1, name: 1, img: 1 },
@@ -84,7 +96,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
     }
 
     render() {
-        const { visible, pendingGoods, goodsTypeNameKeyWord, goodsTypeListData, selectedGoodsTypeId } = this.state;
+        const { goodsTypeGender, visible, pendingGoods, goodsTypeNameKeyWord, goodsTypeListData, selectedGoodsTypeId } = this.state;
         return (
             <Modal
                 title="关联款型"
@@ -102,13 +114,33 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                         </Row>
                     )
                 }
-                <FormItem
-                    labelCol={{ span: 5 }}
-                    wrapperCol={{ span: 15 }}
-                    label="款型名称"
-                >
-                    <Input placeholder="请输入" onChange={this.handleGoodsTypeNameChange} value={goodsTypeNameKeyWord} />
-                </FormItem>
+                <Row>
+                    <Col span={18}>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="名称"
+                        >
+                            <Input placeholder="请输入" onChange={this.handleGoodsTypeNameChange} value={goodsTypeNameKeyWord} />
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <FormItem
+                            labelCol={{ span: 5 }}
+                            wrapperCol={{ span: 15 }}
+                            label="性别"
+                        >
+                            <Select style={{ width: '100%' }} value={goodsTypeGender} onChange={this.handleGoodsTypeGenderChange}>
+                                <Option key={-1} value={-1}>所有</Option>
+                                {
+                                    GENDER.map((g, i) => (
+                                        <Option key={i} value={i}>{ g }</Option>
+                                    ))
+                                }
+                            </Select>
+                        </FormItem>
+                    </Col>
+                </Row>
                 <List
                     rowKey="id"
                     grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
