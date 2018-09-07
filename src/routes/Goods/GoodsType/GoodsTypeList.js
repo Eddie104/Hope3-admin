@@ -256,7 +256,7 @@ export default class GoodsTypeList extends PureComponent {
                                     <Option value={-1} key={-1}>
                                         所有
                                     </Option>
-                                    <Option value={0} key={0}>
+                                    <Option value={-2} key={-2}>
                                         未设置
                                     </Option>
                                     {
