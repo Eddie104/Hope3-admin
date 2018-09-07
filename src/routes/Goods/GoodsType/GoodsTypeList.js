@@ -256,6 +256,9 @@ export default class GoodsTypeList extends PureComponent {
                                     <Option value={-1} key={-1}>
                                         所有
                                     </Option>
+                                    <Option value={0} key={0}>
+                                        未设置
+                                    </Option>
                                     {
                                         GENDER.map((g, i) => (
                                             <Option value={i} key={i}>
