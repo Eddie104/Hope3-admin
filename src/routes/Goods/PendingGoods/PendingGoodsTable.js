@@ -22,6 +22,11 @@ export default class PendingGoodsTable extends StandardTable {
                 ),
             },
             {
+                title: '编号',
+                dataIndex: 'number',
+                width: '250px',
+            },
+            {
                 title: '图片',
                 render: (text, record) => (
                     <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.platform}/${record.imgs[0]}`} />
