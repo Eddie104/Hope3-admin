@@ -36,6 +36,7 @@ export default class GoodsColorEditor extends Component {
                 setFieldsValue({
                     color_name: detail.color_name,
                     color_value: detail.color_value,
+                    color_type: detail.color_type,
                     number: detail.number.join(','),
                 });
             },
@@ -111,28 +112,14 @@ export default class GoodsColorEditor extends Component {
                     <Divider>基本信息</Divider>
                     <Form style={{ width: '100%' }}>
                         <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                            <Col md={6}>
-                                <Form.Item label="颜色名称">
-                                    {getFieldDecorator('color_name')(
-                                        <Input style={{ width: '100%' }} placeholder="请输入颜色名称" />
-                                    )}
-                                </Form.Item>
-                            </Col>
-                            <Col md={6}>
-                                <Form.Item label="颜色值">
-                                    {getFieldDecorator('color_value')(
-                                        <Input style={{ width: '100%' }} placeholder="请输入颜色值" />
-                                    )}
-                                </Form.Item>
-                            </Col>
-                            <Col md={6}>
+                            <Col md={8}>
                                 <Form.Item label="编号">
                                     {getFieldDecorator('number')(
                                         <Input style={{ width: '100%' }} placeholder="请输入编号" />
                                     )}
                                 </Form.Item>
                             </Col>
-                            <Col md={6}>
+                            <Col md={16}>
                                 <Form.Item
                                     labelCol={{ span: 5 }}
                                     wrapperCol={{ span: 15 }}
@@ -147,6 +134,29 @@ export default class GoodsColorEditor extends Component {
                                             />
                                         )
                                     }
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
+                            <Col md={8}>
+                                <Form.Item label="颜色名称">
+                                    {getFieldDecorator('color_name')(
+                                        <Input style={{ width: '100%' }} placeholder="请输入颜色名称" />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col md={8}>
+                                <Form.Item label="颜色值">
+                                    {getFieldDecorator('color_value')(
+                                        <Input style={{ width: '100%' }} placeholder="请输入颜色值" />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col md={8}>
+                                <Form.Item label="颜色类型">
+                                    {getFieldDecorator('color_type')(
+                                        <Input style={{ width: '100%' }} placeholder="请输入颜色类型" />
+                                    )}
                                 </Form.Item>
                             </Col>
                         </Row>
