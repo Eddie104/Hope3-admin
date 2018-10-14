@@ -28,3 +28,11 @@ export async function fetchGoodsImgBySeriesId(seriesId, page, pageSize) {
 export async function setSeriesImg(params) {
     return post(`${SERVER_URL}/admin/set_seried_img`, params);
 }
+
+export async function setSeriesTop(params) {
+    return post(`${SERVER_URL}/admin/set_series_top`, params);
+}
+
+export async function getTopSeries() {
+    return get(`${SERVER_URL}/admin/get_top_series`);
+}

@@ -29,6 +29,10 @@ const menuData = [
                 path: 'brand-list',
             },
             {
+                name: '置顶系列',
+                path: 'top-series-list',
+            },
+            {
                 name: '类目列表',
                 path: 'category-list',
             },

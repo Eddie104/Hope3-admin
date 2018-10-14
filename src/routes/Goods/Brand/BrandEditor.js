@@ -119,6 +119,17 @@ export default class BrandEditor extends Component {
         }
     }
 
+    handlerSetSeriesTop = (seriesId, isTop) => {
+        this.props.dispatch({
+            type: 'brand/setSeriesTop',
+            payload: {
+                isTop,
+                seriesId,
+                brandId: this.props.brand.detail._id,
+            },
+        });
+    }
+
     render() {
         const { seriesImgModalVisible, seriesImgArr, seriedImg } = this.state;
         const { form: { getFieldDecorator }, brand: { detail } } = this.props;
@@ -136,7 +147,10 @@ export default class BrandEditor extends Component {
                     </Form>
                     {getFieldDecorator('series', {
                         initialValue: detail.series || [],
-                    })(<SeriesTableForm handleShowSetSeriesImgModal={this.handleShowSetSeriesImgModal} />)}
+                    })(<SeriesTableForm
+                        handleShowSetSeriesImgModal={this.handleShowSetSeriesImgModal}
+                        handlerSetSeriesTop={this.handlerSetSeriesTop}
+                    />)}
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handlerSubmit} loading={false}>
                             提交

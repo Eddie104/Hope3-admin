@@ -8,6 +8,8 @@ import {
     remove,
     fetchGoodsImgBySeriesId,
     setSeriesImg,
+    setSeriesTop,
+    getTopSeries,
 } from '../services/brand';
 // import { getItemFromArr } from '../utils/utils';
 
@@ -27,6 +29,8 @@ export default {
             },
         },
         detail: {},
+        // 置顶的系列数组
+        topSeriesArr: [],
     },
 
     effects: {
@@ -122,6 +126,36 @@ export default {
                     payload,
                 });
                 callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *setSeriesTop({ payload, callback }, { call, put }) {
+            const response = yield call(setSeriesTop, payload);
+            if (response.success) {
+                if (payload.from === 'topSeriesList') {
+                    yield put({
+                        type: 'updatedTopSeries',
+                        payload,
+                    });
+                } else {
+                    yield put({
+                        type: 'updated',
+                        payload: response.data,
+                    });
+                }
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *findTopSeries(_, { call, put }) {
+            const response = yield call(getTopSeries);
+            if (response.success) {
+                yield put({
+                    type: 'setedSeriesTop',
+                    payload: response.data,
+                });
             } else {
                 message.error(response.data);
             }
@@ -223,6 +257,25 @@ export default {
                     ...state.detail,
                     series,
                 },
+            };
+        },
+        setedSeriesTop(state, { payload }) {
+            return {
+                ...state,
+                topSeriesArr: payload,
+            };
+        },
+        updatedTopSeries(state, { payload }) {
+            const topSeriesArr = [...state.topSeriesArr];
+            for (let i = 0; i < topSeriesArr.length; i++) {
+                if (topSeriesArr[i]._id === payload.seriesId) {
+                    topSeriesArr[i].is_top = payload.isTop;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                topSeriesArr,
             };
         },
     },
