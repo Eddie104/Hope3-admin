@@ -56,11 +56,19 @@ export default {
     reducers: {
         setDetail(state, { payload }) {
             if (payload) {
-                console.log(payload);
+                // console.log(payload);
+                const { goodsType } = payload;
                 return {
                     ...state,
                     detail: payload.goodsColor,
-                    goodsListData: payload.goodsArr,
+                    goodsListData: {
+                        ...payload.goodsArr,
+                        list: payload.goodsArr.list.map((item) => {
+                            item.goodsTypeName = goodsType.name;
+                            item.goodsTypeImg = goodsType.img;
+                            return item;
+                        }),
+                    },
                 };
             }
             return {

@@ -4,7 +4,6 @@ import { Card, Button, Input, Form, Row, Col, Divider, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
 import GoodsTable from '../Goods/GoodsTable';
-// import SKUTableForm from './SKUTableForm';
 import { IMG_SERVER } from '../../../config';
 
 const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
@@ -32,7 +31,7 @@ export default class GoodsColorEditor extends Component {
             },
             callback: () => {
                 const { form: { setFieldsValue }, goodsColor: { detail } } = this.props;
-                console.log(detail);
+                // console.log(detail);
                 setFieldsValue({
                     color_name: detail.color_name,
                     color_value: detail.color_value,
@@ -169,12 +168,6 @@ export default class GoodsColorEditor extends Component {
                         onRemoveGoods={this.handleRemoveGoods}
                         onChange={this.handleStandardTableChange}
                     />
-                    {/* <Divider>SKU</Divider>
-                    {
-                        detail && Array.isArray(detail.sku) && getFieldDecorator('sku', {
-                            initialValue: detail.sku.map((item) => { item.key = item._id; return item; }),
-                        })(<SKUTableForm />)
-                    } */}
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handleSubmit} loading={isSubmiting}>
                             提交

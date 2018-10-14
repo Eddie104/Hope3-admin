@@ -6,6 +6,8 @@ import {
     update,
     add,
     remove,
+    fetchGoodsImgBySeriesId,
+    setSeriesImg,
 } from '../services/brand';
 // import { getItemFromArr } from '../utils/utils';
 
@@ -103,6 +105,27 @@ export default {
                 type: 'clearedDetail',
             });
         },
+        // 根据系列id找到属于这个系列的商品的图片
+        *fetchGoodsImgBySeriesId({ payload, callback }, { call }) {
+            const response = yield call(fetchGoodsImgBySeriesId, payload.seriesId, payload.page, payload.pageSize);
+            if (response.success) {
+                callback && callback(response.data);
+            } else {
+                message.error(response.data);
+            }
+        },
+        *setSeriesImg({ payload, callback }, { call, put }) {
+            const response = yield call(setSeriesImg, payload);
+            if (response.success) {
+                yield put({
+                    type: 'updateSeriedImg',
+                    payload,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
     },
 
     reducers: {
@@ -183,6 +206,22 @@ export default {
                         total: state.listData.pagination.total - 1,
                         current: state.listData.pagination.current,
                     },
+                },
+            };
+        },
+        updateSeriedImg(state, { payload }) {
+            const series = [...state.detail.series];
+            for (let i = 0; i < series.length; i++) {
+                if (series[i]._id === payload.seriesId) {
+                    series[i].img = payload.img;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                detail: {
+                    ...state.detail,
+                    series,
                 },
             };
         },

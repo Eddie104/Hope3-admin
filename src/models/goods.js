@@ -90,7 +90,7 @@ export default {
             };
         },
         setListData(state, { payload }) {
-            console.log(payload);
+            // console.log(payload);
             const { goodsTypeArr, list, pagination } = payload;
             let goodsType = null;
             for (let i = 0; i < list.length; i++) {

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-// import { Link } from 'dva/router';
-import { Card, Button, Input, Form, message } from 'antd';
+import { Card, Button, Input, Form, message, Modal, List, Row, Pagination, Badge } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
-// import Ellipsis from '../../../components/Ellipsis';
 import FooterToolbar from '../../../components/FooterToolbar';
-// import DescriptionList from '../../../components/DescriptionList';
 import SeriesTableForm from './SeriesTableForm';
-// import styles from '../../style.less';
+import { IMG_SERVER } from '../../../config';
+
 const { TextArea } = Input;
 
 @connect(state => ({
@@ -15,6 +13,21 @@ const { TextArea } = Input;
 }))
 @Form.create()
 export default class BrandEditor extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            seriesImgModalVisible: false,
+            seriedImg: '',
+            seriesImgArr: {
+                list: [],
+                pagination: {
+                    total: 0,
+                    current: 1,
+                },
+            },
+        };
+    }
+
     componentDidMount() {
         const { dispatch, match: { params: { id } } } = this.props;
         dispatch({
@@ -55,7 +68,59 @@ export default class BrandEditor extends Component {
         });
     }
 
+    handleShowSetSeriesImgModal = (seriesId) => {
+        this.props.dispatch({
+            type: 'brand/fetchGoodsImgBySeriesId',
+            payload: {
+                seriesId,
+                page: 1,
+                pageSize: 12,
+            },
+            callback: (imgArrData) => {
+                this.seriesId = seriesId;
+                this.setState({ seriesImgModalVisible: true, seriesImgArr: imgArrData, seriedImg: imgArrData.seriedImg });
+            },
+        });
+    }
+
+    handleSeriesImgPageChange = (current, pageSize) => {
+        this.props.dispatch({
+            type: 'brand/fetchGoodsImgBySeriesId',
+            payload: {
+                seriesId: this.seriesId,
+                page: current,
+                pageSize,
+            },
+            callback: (imgArrData) => {
+                this.setState({ seriesImgModalVisible: true, seriesImgArr: imgArrData, seriedImg: imgArrData.seriedImg });
+            },
+        });
+    }
+
+    handleSeriesImgSelected = (img) => {
+        this.setState({
+            seriedImg: img,
+        });
+    }
+
+    handleSetSeriesImg = (result = false) => {
+        if (result) {
+            this.props.dispatch({
+                type: 'brand/setSeriesImg',
+                payload: {
+                    img: this.state.seriedImg,
+                    brandId: this.props.brand.detail._id,
+                    seriesId: this.seriesId,
+                },
+                callback: () => {
+                    this.setState({ seriesImgModalVisible: false });
+                },
+            });
+        }
+    }
+
     render() {
+        const { seriesImgModalVisible, seriesImgArr, seriedImg } = this.state;
         const { form: { getFieldDecorator }, brand: { detail } } = this.props;
         return (
             <PageHeaderLayout>
@@ -71,13 +136,43 @@ export default class BrandEditor extends Component {
                     </Form>
                     {getFieldDecorator('series', {
                         initialValue: detail.series || [],
-                    })(<SeriesTableForm />)}
+                    })(<SeriesTableForm handleShowSetSeriesImgModal={this.handleShowSetSeriesImgModal} />)}
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handlerSubmit} loading={false}>
                             提交
                         </Button>
                     </FooterToolbar>
                 </Card>
+                <Modal
+                    title="设置系列配图"
+                    visible={seriesImgModalVisible}
+                    onOk={this.handleSetSeriesImg}
+                    onCancel={this.handleSetSeriesImg}
+                    width={1200}
+                >
+                    <List
+                        rowKey="id"
+                        grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
+                        dataSource={seriesImgArr.list}
+                        renderItem={item => (
+                            <List.Item key={item._id}>
+                                <Badge dot={seriedImg === item.img}>
+                                    <Row type="flex" justify="center">
+                                        <img
+                                            style={{ width: '120px', height: '120px' }}
+                                            alt={item.name}
+                                            src={`${IMG_SERVER}/${item.img}`}
+                                            onClick={() => this.handleSeriesImgSelected(item.img)}
+                                        />
+                                    </Row>
+                                </Badge>
+                            </List.Item>
+                        )}
+                    />
+                    <Row type="flex" justify="end">
+                        <Pagination current={seriesImgArr.pagination.current} total={seriesImgArr.pagination.total} pageSize={12} onChange={this.handleSeriesImgPageChange} />
+                    </Row>
+                </Modal>
             </PageHeaderLayout>
         );
     }
