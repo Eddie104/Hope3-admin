@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Card, Form, Input, Button, Alert, Modal, Radio, Select } from 'antd';
+import { Row, Col, Card, Form, Input, Button, Alert, Modal, Radio, Select, message } from 'antd';
 import GoodsTypeTable from './GoodsTypeTable';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import { GENDER } from '../../../config';
@@ -112,16 +112,20 @@ export default class GoodsTypeList extends PureComponent {
 
     handleMergeGoodsType = () => {
         const { mergeTargetGoodsType, selectedRows } = this.state;
-        this.props.dispatch({
-            type: 'goodsType/merge',
-            payload: {
-                mergeTargetGoodsType,
-                goodsTypeArr: selectedRows.map(item => item._id),
-            },
-            callback: () => {
-                this.setState({ mergeGoodsTypeModalVisible: false, selectedRows: [] });
-            },
-        });
+        if (mergeTargetGoodsType) {
+            this.props.dispatch({
+                type: 'goodsType/merge',
+                payload: {
+                    mergeTargetGoodsType,
+                    goodsTypeArr: selectedRows.map(item => item._id),
+                },
+                callback: () => {
+                    this.setState({ mergeGoodsTypeModalVisible: false, selectedRows: [], mergeTargetGoodsType: null });
+                },
+            });
+        } else {
+            message.error('请先选择一个保留的款型！');
+        }
     }
 
     handleMergeTargetGoodsTypeChange = ({ target: { value } }) => {
