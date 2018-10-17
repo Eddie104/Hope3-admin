@@ -9,6 +9,12 @@ export default class MyCheckbox extends PureComponent {
         };
     }
 
+    componentWillReceiveProps(newProps) {
+        this.setState({
+            value: !!newProps.value,
+        });
+    }
+
     handleChange = (evt) => {
         const { onChange } = this.props;
         onChange && onChange(evt);

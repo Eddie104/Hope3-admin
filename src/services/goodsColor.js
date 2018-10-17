@@ -12,3 +12,7 @@ export async function update(params) {
 export async function removeGoods(_id, goodsId) {
     return get(`${SERVER_URL}/api/admin/remove_goods/${_id}/${goodsId}`);
 }
+
+export async function findPopular(page, count) {
+    return get(`${SERVER_URL}/api/admin/find_popular/${page}/${count}`);
+}

@@ -17,7 +17,7 @@ const menuData1 = [
 const menuData = [
     {
         name: '商品',
-        icon: 'user',
+        icon: 'desktop',
         path: 'goods',
         children: [
             {
@@ -27,10 +27,6 @@ const menuData = [
             {
                 name: '品牌列表',
                 path: 'brand-list',
-            },
-            {
-                name: '置顶系列',
-                path: 'top-series-list',
             },
             {
                 name: '类目列表',
@@ -47,6 +43,21 @@ const menuData = [
             {
                 name: '待处理商品列表',
                 path: 'pending-goods-list',
+            },
+        ],
+    },
+    {
+        name: 'APP',
+        icon: 'mobile',
+        path: 'app',
+        children: [
+            {
+                name: '置顶系列',
+                path: 'top-series-list',
+            },
+            {
+                name: '流行配色',
+                path: 'popular-goods-color-list',
             },
         ],
     },

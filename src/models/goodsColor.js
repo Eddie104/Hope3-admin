@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { detail, update, removeGoods } from '../services/goodsColor';
+import { detail, update, removeGoods, findPopular } from '../services/goodsColor';
 
 export default {
     namespace: 'goodsColor',
@@ -12,8 +12,32 @@ export default {
                 current: 0,
             },
         },
+        popularListData: {
+            list: [],
+            pagination: {
+                total: 0,
+                current: 0,
+            },
+        },
+        loading: false,
     },
     effects: {
+        *findPopular({ payload: { page, count }, callback }, { call, put }) {
+            yield put({
+                type: 'setLoading',
+                payload: true,
+            });
+            const response = yield call(findPopular, page, count);
+            if (response.success) {
+                yield put({
+                    type: 'setPopularListData',
+                    payload: response.data,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
         *detail({ payload, callback }, { call, put }) {
             const response = yield call(detail, payload);
             if (response.success) {
@@ -26,11 +50,17 @@ export default {
                 message.error(response.data);
             }
         },
-        *update({ payload, callback }, { call }) {
+        *update({ payload, callback }, { call, put }) {
             const response = yield call(update, payload);
             if (response.success) {
                 message.success('保存成功');
                 callback && callback();
+                if (payload.from === 'popularGoodsColorList') {
+                    yield put({
+                        type: 'updatePopularListData',
+                        payload,
+                    });
+                }
             }
         },
         *clearDetail(_, { put }) {
@@ -95,6 +125,35 @@ export default {
                 goodsListData: {
                     list,
                     pagination: { ...state.goodsListData.pagination },
+                },
+            };
+        },
+        setPopularListData(state, { payload }) {
+            return {
+                ...state,
+                popularListData: payload,
+                loading: false,
+            };
+        },
+        setLoading(state, { payload }) {
+            return {
+                ...state,
+                loading: !!payload,
+            };
+        },
+        updatePopularListData(state, { payload: { _id, is_popular } }) { // eslint-disable-line
+            const list = [...state.popularListData.list];
+            for (let i = 0; i < list.length; i++) {
+                if (list[i]._id === _id) {
+                    list[i].is_popular = is_popular; // eslint-disable-line
+                    break;
+                }
+            }
+            return {
+                ...state,
+                popularListData: {
+                    list,
+                    pagination: state.popularListData.pagination,
                 },
             };
         },

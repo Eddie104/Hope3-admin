@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { Card, Button, Input, Form, Row, Col, Divider, message } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
+import MyCheckbox from '../../../components/MyCheckbox';
 import GoodsTable from '../Goods/GoodsTable';
 import { IMG_SERVER } from '../../../config';
 
@@ -37,6 +38,7 @@ export default class GoodsColorEditor extends Component {
                     color_value: detail.color_value,
                     color_type: detail.color_type,
                     number: detail.number.join(','),
+                    is_popular: detail.is_popular,
                 });
             },
         });
@@ -76,6 +78,7 @@ export default class GoodsColorEditor extends Component {
             } else {
                 this.setState({ isSubmiting: true }, () => {
                     values.number = values.number.split(',');
+                    // console.log(values);
                     dispatch({
                         type: 'goodsColor/update',
                         payload: {
@@ -102,6 +105,13 @@ export default class GoodsColorEditor extends Component {
         });
     }
 
+    handleIsPopularChange = (isPopular) => {
+        const { form: { setFieldsValue } } = this.props;
+        setFieldsValue({
+            is_popular: isPopular,
+        });
+    }
+
     render() {
         const { isSubmiting } = this.state;
         const { form: { getFieldDecorator }, goodsColor: { detail, goodsListData } } = this.props;
@@ -118,7 +128,14 @@ export default class GoodsColorEditor extends Component {
                                     )}
                                 </Form.Item>
                             </Col>
-                            <Col md={16}>
+                            <Col md={8}>
+                                <Form.Item label="是否流行">
+                                    {getFieldDecorator('is_popular')(
+                                        <MyCheckbox onChange={e => this.handleIsPopularChange(e.target.checked)} />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col md={8}>
                                 <Form.Item
                                     labelCol={{ span: 5 }}
                                     wrapperCol={{ span: 15 }}

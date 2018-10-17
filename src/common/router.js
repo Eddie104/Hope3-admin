@@ -74,9 +74,6 @@ export const getRouterData = (app) => {
         '/goods/brand-list': {
             component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/BrandList')),
         },
-        '/goods/top-series-list': {
-            component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/TopSeriesList')),
-        },
         '/goods/goods-type-list': {
             component: dynamicWrapper(app, ['goodsType'], () => import('../routes/Goods/GoodsType/GoodsTypeList')),
         },
@@ -121,6 +118,12 @@ export const getRouterData = (app) => {
         },
         '/goods/edit-category/:id': {
             component: dynamicWrapper(app, ['category'], () => import('../routes/Goods/Category/CategoryEditor')),
+        },
+        '/app/top-series-list': {
+            component: dynamicWrapper(app, ['brand'], () => import('../routes/Goods/Brand/TopSeriesList')),
+        },
+        '/app/popular-goods-color-list': {
+            component: dynamicWrapper(app, ['goodsColor'], () => import('../routes/Goods/GoodsColor/PopularGoodsColorList')),
         },
     };
     // Get name from ./menu.js or just set it in the router data.
