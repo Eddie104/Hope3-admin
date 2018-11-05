@@ -144,21 +144,6 @@ export default class NewGoodsTypeModal extends PureComponent {
                     <FormItem
                         labelCol={{ span: 5 }}
                         wrapperCol={{ span: 15 }}
-                        label="性别"
-                    >
-                        <Select style={{ width: '100%' }} onChange={this.handleGenderChange}>
-                            {
-                                GENDER.map((g, i) => (
-                                    <Option key={i} value={i}>
-                                        {g}
-                                    </Option>
-                                ))
-                            }
-                        </Select>
-                    </FormItem>
-                    <FormItem
-                        labelCol={{ span: 5 }}
-                        wrapperCol={{ span: 15 }}
                         label="分类"
                     >
                         <Row gutter={16}>
@@ -208,6 +193,21 @@ export default class NewGoodsTypeModal extends PureComponent {
                                 </Select>
                             </Col>
                         </Row>
+                    </FormItem>
+                    <FormItem
+                        labelCol={{ span: 5 }}
+                        wrapperCol={{ span: 15 }}
+                        label="性别"
+                    >
+                        <Select style={{ width: '100%' }} onChange={this.handleGenderChange}>
+                            {
+                                GENDER.map((g, i) => (
+                                    <Option key={i} value={i}>
+                                        {g}
+                                    </Option>
+                                ))
+                            }
+                        </Select>
                     </FormItem>
                     {
                         pendingGoods && Array.isArray(pendingGoods.imgs) && (
