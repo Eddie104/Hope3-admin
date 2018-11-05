@@ -121,6 +121,7 @@ export default class GoodsTypeList extends PureComponent {
                 },
                 callback: () => {
                     this.setState({ mergeGoodsTypeModalVisible: false, selectedRows: [], mergeTargetGoodsType: null });
+                    this.table.cleanSelectedKeys();
                 },
             });
         } else {
@@ -313,6 +314,7 @@ export default class GoodsTypeList extends PureComponent {
                             )
                         }
                         <GoodsTypeTable
+                            ref={(c) => { this.table = c; }}
                             loading={loading}
                             data={listData}
                             onSelectRow={this.handleSelectRows}
