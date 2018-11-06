@@ -37,6 +37,8 @@ export default class GoodsTypeList extends PureComponent {
         const { goodsType: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
             name: findFormValue.name,
+            key1: findFormValue.key1,
+            key2: findFormValue.key2,
             gender: findFormValue.gender,
             category: findFormValue.category,
             subCategory: findFormValue.subCategory,
@@ -247,10 +249,24 @@ export default class GoodsTypeList extends PureComponent {
                     </Col>
                 </Row>
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                    <Col span={12}>
+                    <Col span={6}>
                         <FormItem label="名称">
                             {getFieldDecorator('name')(
-                                <Input placeholder="请输入款型名称" />
+                                <Input placeholder="款型名称" />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <FormItem label="关键词1">
+                            {getFieldDecorator('key1')(
+                                <Input placeholder="关键词1" />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col span={6}>
+                        <FormItem label="关键词2">
+                            {getFieldDecorator('key2')(
+                                <Input placeholder="关键词2" />
                             )}
                         </FormItem>
                     </Col>
@@ -275,12 +291,12 @@ export default class GoodsTypeList extends PureComponent {
                             )}
                         </FormItem>
                     </Col>
-                    <Col span={6}>
-                        <span className={styles.submitButtons}>
-                            <Button type="primary" htmlType="submit">查询</Button>
-                            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-                        </span>
-                    </Col>
+                </Row>
+                <Row type="flex" justify="end">
+                    <span className={styles.submitButtons}>
+                        <Button type="primary" htmlType="submit">查询</Button>
+                        <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+                    </span>
                 </Row>
             </Form>
         );

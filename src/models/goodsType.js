@@ -8,6 +8,8 @@ export default {
         loading: false,
         findFormValue: {
             name: null,
+            key1: null,
+            key2: null,
             gender: -1,
             category: -1,
             subCategory: -1,
@@ -19,6 +21,7 @@ export default {
             pagination: {
                 total: 0,
                 current: 0,
+                pageSizeOptions: ['10', '20', '30', '40', '300'],
             },
         },
         goodsColorArr: [],
@@ -37,6 +40,8 @@ export default {
                 type: 'createFindFormValue',
                 payload: {
                     name: payload.name,
+                    key1: payload.key1,
+                    key2: payload.key2,
                     gender: payload.gender,
                     category: payload.category,
                     subCategory: payload.subCategory,
@@ -165,7 +170,11 @@ export default {
             return {
                 ...state,
                 listData: {
-                    ...payload.listData,
+                    list: payload.listData.list,
+                    pagination: {
+                        ...payload.listData.pagination,
+                        pageSizeOptions: ['10', '20', '30', '40', '300'],
+                    },
                 },
                 category: payload.category,
                 brands: payload.brands,
@@ -176,6 +185,8 @@ export default {
                 ...state,
                 findFormValue: {
                     name: null,
+                    key1: null,
+                    key2: null,
                     gender: -1,
                     category: -1,
                     subCategory: -1,
