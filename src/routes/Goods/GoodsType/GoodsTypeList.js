@@ -16,6 +16,8 @@ const FIELDS = {
     name: 1,
     id: 1,
     img: 1,
+    sub_category: 1,
+    series: 1,
 };
 
 @connect(state => ({

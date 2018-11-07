@@ -167,10 +167,33 @@ export default {
             };
         },
         setListData(state, { payload }) {
+            const list = [...payload.listData.list];
+            let findSeriesNmae = false;
+            for (let i = 0; i < list.length; i++) {
+                findSeriesNmae = false;
+                for (let j = 0; j < payload.brands.length; j++) {
+                    for (let k = 0; k < payload.brands[j].series.length; k++) {
+                        if (payload.brands[j].series[k]._id === list[i].series) {
+                            list[i].seriesName = payload.brands[j].series[k].name;
+                            findSeriesNmae = true;
+                            break;
+                        }
+                    }
+                    if (findSeriesNmae) {
+                        break;
+                    }
+                }
+                for (let j = 0; j < payload.subCategory.length; j++) {
+                    if (payload.subCategory[j]._id === list[i].sub_category) {
+                        list[i].subCategory = payload.subCategory[j].name;
+                        break;
+                    }
+                }
+            }
             return {
                 ...state,
                 listData: {
-                    list: payload.listData.list,
+                    list,
                     pagination: {
                         ...payload.listData.pagination,
                         pageSizeOptions: ['10', '20', '30', '40', '300'],
@@ -178,6 +201,7 @@ export default {
                 },
                 category: payload.category,
                 brands: payload.brands,
+                subCategory: payload.subCategory,
             };
         },
         resetedFormValue(state) {

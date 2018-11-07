@@ -25,6 +25,14 @@ export default class GoodsTypeTable extends StandardTable {
                 ),
             },
             {
+                title: '系列',
+                dataIndex: 'seriesName',
+            },
+            {
+                title: '子类目',
+                dataIndex: 'subCategory',
+            },
+            {
                 title: '操作',
                 width: '100px',
                 render: (_, record) => (
