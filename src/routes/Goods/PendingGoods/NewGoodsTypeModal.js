@@ -29,7 +29,7 @@ export default class NewGoodsTypeModal extends PureComponent {
             category: nextProps.category,
             subCategory: nextProps.subCategory,
             visible: !!nextProps.visible,
-            pendingGoods: { ...nextProps.pendingGoods, ...this.state.pendingGoods },
+            pendingGoods: { ...nextProps.pendingGoods },
             isShowingSpin: false,
         });
     }
