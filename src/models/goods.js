@@ -8,6 +8,7 @@ export default {
         loading: false,
         findFormValue: {
             name: null,
+            number: null,
         },
         listData: {
             list: [],
@@ -29,6 +30,7 @@ export default {
                 type: 'createFindFormValue',
                 payload: {
                     name: payload.name,
+                    number: payload.number,
                 },
             });
             if (payload.resetFormValue) {
@@ -113,6 +115,7 @@ export default {
                 ...state,
                 findFormValue: {
                     name: null,
+                    number: null,
                 },
             };
         },

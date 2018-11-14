@@ -13,6 +13,7 @@ const FIELDS = {
     name: 1,
     id: 1,
     url: 1,
+    number: 1,
 };
 
 @connect(state => ({
@@ -24,6 +25,7 @@ export default class GoodsList extends PureComponent {
         const { goods: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
             name: findFormValue.name,
+            number: findFormValue.number,
         });
         this.handleSearch();
     }
@@ -88,10 +90,17 @@ export default class GoodsList extends PureComponent {
         return (
             <Form onSubmit={this.handleSearch} layout="inline">
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                    <Col md={18} sm={24}>
+                    <Col md={9} sm={24}>
                         <FormItem label="款型名称">
                             {getFieldDecorator('name')(
                                 <Input placeholder="请输入款型名称" />
+                            )}
+                        </FormItem>
+                    </Col>
+                    <Col md={9} sm={24}>
+                        <FormItem label="款型编号">
+                            {getFieldDecorator('number')(
+                                <Input placeholder="请输入款型编号" />
                             )}
                         </FormItem>
                     </Col>

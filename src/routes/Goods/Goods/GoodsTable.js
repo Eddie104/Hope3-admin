@@ -26,6 +26,11 @@ export default class GoodsTable extends StandardTable {
                 ),
             },
             {
+                title: '编号',
+                width: '200px',
+                dataIndex: 'number',
+            },
+            {
                 title: '图片',
                 render: (text, record) => (
                     <img style={{ width: '130px' }} alt={record.name} src={`${IMG_SERVER}/${record.img}`} />
