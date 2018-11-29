@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio, Popconfirm } from 'antd';
+import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio, Popconfirm, Tag } from 'antd';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
 import { GENDER, IMG_SERVER } from '../../../config';
@@ -286,6 +286,13 @@ export default class GoodsTypeEditor extends Component {
                                             item._id === targetGoodsColorId && <Icon type="smile" />
                                         }
                                     </Row>
+                                    {
+                                        item.hot_degree > 0 && (
+                                            <Row type="flex" justify="center">
+                                                <Tag color="magenta">热度:{ item.hot_degree }</Tag>
+                                            </Row>
+                                        )
+                                    }
                                     <Row type="flex" justify="center">
                                         <Checkbox
                                             onChange={({ target: { checked } }) => this.handleGoodsColorCheckboxChange(item, checked)}

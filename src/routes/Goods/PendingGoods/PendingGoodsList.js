@@ -18,6 +18,7 @@ const FIELDS = {
     name: 1,
     id: 1,
     number: 1,
+    priority: 1,
 };
 
 @connect(state => ({

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'dva/router';
+import { Tag } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import { IMG_SERVER } from '../../../config';
 
@@ -17,6 +18,16 @@ export default class GoodsTypeTable extends StandardTable {
                 title: '名称',
                 dataIndex: 'name',
                 width: '250px',
+            },
+            {
+                title: '标签',
+                dataIndex: 't',
+                render: (_, record) => {
+                    if (record.is_hot) {
+                        return <Tag color="#f50">热门</Tag>;
+                    }
+                    return null;
+                },
             },
             {
                 title: '图片',

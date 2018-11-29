@@ -14,6 +14,11 @@ export default class PendingGoodsTable extends StandardTable {
                 width: '100px',
             },
             {
+                title: '优先级',
+                dataIndex: 'priority',
+                width: '100px',
+            },
+            {
                 title: '名称',
                 dataIndex: 'name',
                 width: '250px',

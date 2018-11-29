@@ -220,11 +220,12 @@ export default {
             };
         },
         setDetail(state, { payload }) {
+            const sortFun = (a, b) => a.hot_degree < b.hot_degree;
             if (payload) {
                 return {
                     ...state,
                     detail: payload.goodsType,
-                    goodsColorArr: payload.goodsColorArr,
+                    goodsColorArr: payload.goodsColorArr.sort(sortFun),
                     brands: payload.brands,
                     category: payload.category,
                 };
