@@ -66,6 +66,7 @@ export default class GoodsEditor extends Component {
                                     <Form.Item label="图片">
                                         <a
                                             target="_blank"
+                                            rel="noreferrer noopener"
                                             href={detail.url}
                                         >
                                             <img style={{ width: '200px' }} alt={detail.name} src={`${IMG_SERVER}/${detail.imgs[0]}`} />
