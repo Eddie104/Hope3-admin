@@ -125,6 +125,9 @@ export const getRouterData = (app) => {
         '/app/popular-goods-color-list': {
             component: dynamicWrapper(app, ['goodsColor'], () => import('../routes/Goods/GoodsColor/PopularGoodsColorList')),
         },
+        '/app/recommend-goods-color-list': {
+            component: dynamicWrapper(app, ['goodsColor'], () => import('../routes/Goods/GoodsColor/RecommendGoodsColorList')),
+        },
     };
     // Get name from ./menu.js or just set it in the router data.
     const menuData = getFlatMenuData(getMenuData());

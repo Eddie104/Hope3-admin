@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { detail, update, removeGoods, findPopular } from '../services/goodsColor';
+import { detail, update, removeGoods, findPopular, findRecommend } from '../services/goodsColor';
 
 export default {
     namespace: 'goodsColor',
@@ -19,6 +19,13 @@ export default {
                 current: 0,
             },
         },
+        recommendListData: {
+            list: [],
+            pagination: {
+                total: 0,
+                current: 0,
+            },
+        },
         loading: false,
     },
     effects: {
@@ -31,6 +38,22 @@ export default {
             if (response.success) {
                 yield put({
                     type: 'setPopularListData',
+                    payload: response.data,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *findRecommend({ payload: { page, count }, callback }, { call, put }) {
+            yield put({
+                type: 'setLoading',
+                payload: true,
+            });
+            const response = yield call(findRecommend, page, count);
+            if (response.success) {
+                yield put({
+                    type: 'setRecommendListData',
                     payload: response.data,
                 });
                 callback && callback();
@@ -58,6 +81,11 @@ export default {
                 if (payload.from === 'popularGoodsColorList') {
                     yield put({
                         type: 'updatePopularListData',
+                        payload,
+                    });
+                } else if (payload.from === 'recommendGoodsColorList') {
+                    yield put({
+                        type: 'updateRecommendListData',
                         payload,
                     });
                 }
@@ -135,6 +163,13 @@ export default {
                 loading: false,
             };
         },
+        setRecommendListData(state, { payload }) {
+            return {
+                ...state,
+                recommendListData: payload,
+                loading: false,
+            };
+        },
         setLoading(state, { payload }) {
             return {
                 ...state,
@@ -154,6 +189,22 @@ export default {
                 popularListData: {
                     list,
                     pagination: state.popularListData.pagination,
+                },
+            };
+        },
+        updateRecommendListData(state, { payload: { _id, is_recommend } }) { // eslint-disable-line
+            const list = [...state.recommendListData.list];
+            for (let i = 0; i < list.length; i++) {
+                if (list[i]._id === _id) {
+                    list[i].is_recommend = is_recommend; // eslint-disable-line
+                    break;
+                }
+            }
+            return {
+                ...state,
+                recommendListData: {
+                    list,
+                    pagination: state.recommendListData.pagination,
                 },
             };
         },

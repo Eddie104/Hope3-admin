@@ -16,3 +16,7 @@ export async function removeGoods(_id, goodsId) {
 export async function findPopular(page, count) {
     return get(`${SERVER_URL}/api/admin/find_popular/${page}/${count}`);
 }
+
+export async function findRecommend(page, count) {
+    return get(`${SERVER_URL}/api/admin/find_recommend/${page}/${count}`);
+}
