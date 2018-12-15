@@ -31,8 +31,9 @@ export default class PendingGoodsList extends PureComponent {
         this.state = {
             isShowingNewGoodsTypeModal: false,
             isShowingConnectGoodsTypeModal: false,
-            targetPendingGoods: null,
+            targetPendingGoodsArr: null,
             isShowingSpin: false,
+            selectedRows: [],
         };
     }
 
@@ -40,6 +41,7 @@ export default class PendingGoodsList extends PureComponent {
         const { pendingGoods: { findFormValue }, form: { setFieldsValue } } = this.props;
         setFieldsValue({
             name: findFormValue.name,
+            number: findFormValue.number,
             only_pending: findFormValue.only_pending,
             is_deleted: findFormValue.is_deleted,
         });
@@ -122,7 +124,7 @@ export default class PendingGoodsList extends PureComponent {
     handleNewGoodsType = (pendingGoods) => {
         this.setState({
             isShowingNewGoodsTypeModal: true,
-            targetPendingGoods: pendingGoods,
+            targetPendingGoodsArr: pendingGoods,
         });
     }
 
@@ -147,7 +149,15 @@ export default class PendingGoodsList extends PureComponent {
     handleConnectGoodsType = (pendingGoods) => {
         this.setState({
             isShowingConnectGoodsTypeModal: true,
-            targetPendingGoods: pendingGoods,
+            targetPendingGoodsArr: [pendingGoods],
+        });
+    }
+
+    handleConnectGoodsTypeByBatch = () => {
+        const { selectedRows } = this.state;
+        this.setState({
+            isShowingConnectGoodsTypeModal: true,
+            targetPendingGoodsArr: [...selectedRows],
         });
     }
 
@@ -155,7 +165,7 @@ export default class PendingGoodsList extends PureComponent {
         this.props.dispatch({
             type: 'pendingGoods/connectGoodsType',
             payload: {
-                ...this.state.targetPendingGoods,
+                targetPendingGoodsArr: [...this.state.targetPendingGoodsArr],
                 goods_type_id: goodsTypeId,
             },
             callback: () => {
@@ -201,18 +211,31 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleSelectRows = (selectedRows) => {
+        this.setState({ selectedRows });
+    }
+
     renderForm() {
         const { form: { getFieldDecorator }, pendingGoods: { listData: { platform } } } = this.props;
         return (
             <Form onSubmit={this.handleSearch} layout="inline">
                 <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
-                    <Col md={6} sm={24}>
+                    <Col md={12} sm={24}>
                         <FormItem label="商品名称">
                             {getFieldDecorator('name')(
                                 <Input placeholder="请输入商品名称" />
                             )}
                         </FormItem>
                     </Col>
+                    <Col md={12} sm={24}>
+                        <FormItem label="商品编号">
+                            {getFieldDecorator('number')(
+                                <Input placeholder="请输入商品编号" />
+                            )}
+                        </FormItem>
+                    </Col>
+                </Row>
+                <Row gutter={{ md: 8, lg: 24, xl: 48 }}>
                     <Col md={6} sm={24}>
                         <FormItem label="商品平台">
                             {getFieldDecorator('platform', {
@@ -233,14 +256,14 @@ export default class PendingGoodsList extends PureComponent {
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={4} sm={24}>
+                    <Col md={6} sm={24}>
                         <FormItem label="只显示未处理商品">
                             {getFieldDecorator('only_pending')(
                                 <MyCheckbox onChange={this.handleOnlyPendingChange} />
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={4} sm={24}>
+                    <Col md={6} sm={24}>
                         <FormItem>
                             {getFieldDecorator('is_deleted')(
                                 <Select onChange={this.handleIsDelected}>
@@ -257,7 +280,7 @@ export default class PendingGoodsList extends PureComponent {
                             )}
                         </FormItem>
                     </Col>
-                    <Col md={4} sm={24}>
+                    <Col md={6} sm={24}>
                         <span className={styles.submitButtons}>
                             <Button type="primary" htmlType="submit">查询</Button>
                             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
@@ -269,7 +292,7 @@ export default class PendingGoodsList extends PureComponent {
     }
 
     render() {
-        const { isShowingNewGoodsTypeModal, isShowingConnectGoodsTypeModal, targetPendingGoods, isShowingSpin } = this.state;
+        const { isShowingNewGoodsTypeModal, isShowingConnectGoodsTypeModal, targetPendingGoodsArr, isShowingSpin, selectedRows } = this.state;
         const { pendingGoods: { loading, listData, brands, category, subCategory }, dispatch } = this.props;
         return (
             <PageHeaderLayout>
@@ -280,12 +303,19 @@ export default class PendingGoodsList extends PureComponent {
                                 {this.renderForm()}
                             </div>
                             <div className={styles.tableListOperator}>
-                                <Button type="primary" onClick={this.handleAutoConnectByName}>
+                                {
+                                    selectedRows.length > 1 && (
+                                        <Button type="primary" onClick={this.handleConnectGoodsTypeByBatch}>
+                                            批量关联款型
+                                        </Button>
+                                    )
+                                }
+                                {/* <Button type="primary" onClick={this.handleAutoConnectByName}>
                                     relation by name
                                 </Button>
                                 <Button type="primary" onClick={this.handleAutoConnectByNumber}>
                                     relation by number
-                                </Button>
+                                </Button> */}
                             </div>
                             <PendingGoodsTable
                                 loading={loading}
@@ -301,7 +331,7 @@ export default class PendingGoodsList extends PureComponent {
                 </Spin>
                 <NewGoodsTypeModal
                     visible={isShowingNewGoodsTypeModal}
-                    pendingGoods={targetPendingGoods}
+                    pendingGoods={targetPendingGoodsArr}
                     dispatch={dispatch}
                     brands={brands}
                     category={category}
@@ -311,7 +341,7 @@ export default class PendingGoodsList extends PureComponent {
                 />
                 <ConnectGoodsTypeModal
                     visible={isShowingConnectGoodsTypeModal}
-                    pendingGoods={targetPendingGoods}
+                    pendingGoods={targetPendingGoodsArr}
                     dispatch={dispatch}
                     // category={category}
                     // subCategory={subCategory}
