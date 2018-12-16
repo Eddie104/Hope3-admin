@@ -18,7 +18,7 @@ export async function connectGoodsType(params) {
 }
 
 export async function setCheck(idArr) {
-    return post(`${SERVER_URL}/api/admin/set_pending_goods_check`, idArr);
+    return post(`${SERVER_URL}/api/admin/set_pending_goods_check`, { idArr });
 }
 
 export async function autoConnectByNumber() {
