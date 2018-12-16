@@ -118,7 +118,7 @@ export default {
         *addGoodsType({ payload, callback }, { call, put }) {
             const response = yield call(addGoodsType, payload);
             if (response.success) {
-                yield call(setCheck, payload._id);
+                yield call(setCheck, [payload._id]);
                 yield put({
                     type: 'setChecked',
                     payload: [payload._id],
