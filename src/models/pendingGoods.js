@@ -131,7 +131,7 @@ export default {
         *connectGoodsType({ payload, callback }, { call, put }) {
             const response = yield call(connectGoodsType, payload);
             if (response.success) {
-                yield call(setCheck, payload._id);
+                yield call(setCheck, payload.map(item => item._id));
                 yield put({
                     type: 'setChecked',
                     payload: payload._id,
