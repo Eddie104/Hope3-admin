@@ -52,14 +52,14 @@ export default class GoodsColorEditor extends Component {
     }
 
     handleStandardTableChange = (pagination, filtersArg) => {
-        const { dispatch, goods: { findFormValue } } = this.props;
+        const { dispatch, goodsColor: { findFormValue, detail } } = this.props;
         const filters = Object.keys(filtersArg).reduce((obj, key) => {
             const newObj = { ...obj };
             newObj[key] = getValue(filtersArg[key]);
             return newObj;
         }, {});
-
         const params = {
+            _id: detail._id,
             page: pagination.current,
             count: pagination.pageSize,
             ...findFormValue,
