@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Button, Input, Form, Row, Col, Select, Divider, List, Icon, message, Checkbox, Modal, Radio, Popconfirm, Tag } from 'antd';
+import { Card, Button, Input, Form, Row, Col, Select, Divider, List, message, Modal, Radio } from 'antd';
+import GoodsColorListItem from './GoodsColorListItem';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
-import { GENDER, IMG_SERVER } from '../../../config';
-import styles from '../../style.less';
+import { GENDER } from '../../../config';
+// import styles from '../../style.less';
 
 const { Option } = Select;
 const RadioGroup = Radio.Group;
@@ -182,6 +183,35 @@ export default class GoodsTypeEditor extends Component {
     render() {
         const { series, mergeGoodsColorModalVisible, selectedGoodsColor, targetGoodsColorId } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
+        const newGoodsColorArr = [];
+        let number = null;
+        let numberKey = null;
+        let tmpArr = null;
+        let exists = null;
+        for (let index = 0; index < goodsColorArr.length; index++) {
+            number = goodsColorArr[index].number[0];
+            tmpArr = number.split('-');
+            numberKey = tmpArr[0];
+            goodsColorArr[index].numberVal = parseInt(tmpArr[1], 10);
+            exists = false;
+            for (let i = 0; i < newGoodsColorArr.length; i++) {
+                if (newGoodsColorArr[i].numberKey === numberKey) {
+                    newGoodsColorArr[i].goodsColorArr.push(goodsColorArr[index]);
+                    exists = true;
+                    break;
+                }
+            }
+            if (!exists) {
+                newGoodsColorArr.push({
+                    numberKey,
+                    goodsColorArr: [goodsColorArr[index]],
+                });
+            }
+        }
+        const sortFunc = (a, b) => a.numberVal - b.numberVal;
+        for (let index = 0; index < newGoodsColorArr.length; index++) {
+            newGoodsColorArr[index].goodsColorArr.sort(sortFunc);
+        }
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -269,56 +299,29 @@ export default class GoodsTypeEditor extends Component {
                     <Button type="primary" style={{ marginBottom: '12px' }} onClick={this.handleMergeSelectedGoodsColor}>
                         合并配色
                     </Button>
-                    <List
-                        rowKey="id"
-                        grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
-                        dataSource={['', ...goodsColorArr]}
-                        renderItem={item =>
-                            (item ? (
-                                <List.Item
-                                    key={item._id}
-                                    style={{ width: '120px', height: '240px' }}
-                                >
-                                    { item.number.join('\n') }
-                                    <Row type="flex" justify="center" onClick={() => this.handleGoodsColorClick(item._id)}>
-                                        <img style={{ width: '120px', height: '120px' }} alt={item.img} src={`${IMG_SERVER}/${item.img}`} />
-                                        {
-                                            item._id === targetGoodsColorId && <Icon type="smile" />
-                                        }
-                                    </Row>
-                                    {
-                                        item.hot_degree > 0 && (
-                                            <Row type="flex" justify="center">
-                                                <Tag color="magenta">热度:{ item.hot_degree }</Tag>
-                                            </Row>
+                    {
+                        newGoodsColorArr.map((goodsColorArrData, i) => (
+                            <div key={`list${i}`}>
+                                <Divider>{goodsColorArrData.numberKey}</Divider>
+                                <List
+                                    rowKey="id"
+                                    grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
+                                    dataSource={goodsColorArrData.goodsColorArr}
+                                    renderItem={item =>
+                                        (
+                                            <GoodsColorListItem
+                                                goodsColor={item}
+                                                targetGoodsColorId={targetGoodsColorId}
+                                                handleGoodsColorClick={this.handleGoodsColorClick}
+                                                handleGoodsColorCheckboxChange={this.handleGoodsColorCheckboxChange}
+                                                handleRemoveGoodsColor={this.handleRemoveGoodsColor}
+                                            />
                                         )
                                     }
-                                    <Row type="flex" justify="center">
-                                        <Checkbox
-                                            onChange={({ target: { checked } }) => this.handleGoodsColorCheckboxChange(item, checked)}
-                                        >
-                                            {item.color_name || 'no name'}
-                                        </Checkbox>
-                                    </Row>
-                                    <Row type="flex" justify="center">
-                                        <Popconfirm title="是否要删除配色数据？" onConfirm={() => this.handleRemoveGoodsColor(item._id)}>
-                                            <Button type="danger">删除</Button>
-                                        </Popconfirm>
-                                    </Row>
-                                </List.Item>
-                            ) : (
-                                <List.Item>
-                                    <Button
-                                        type="dashed"
-                                        className={styles.newButton}
-                                        style={{ width: '120px', height: '240px' }}
-                                    >
-                                        <Icon type="plus" /> 新增配色
-                                    </Button>
-                                </List.Item>
-                            ))
-                        }
-                    />
+                                />
+                            </div>
+                        ))
+                    }
                     <FooterToolbar>
                         <Button type="primary" onClick={this.handleSubmit} loading={false}>
                             提交
