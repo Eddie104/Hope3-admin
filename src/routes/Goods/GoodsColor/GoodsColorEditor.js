@@ -39,6 +39,7 @@ export default class GoodsColorEditor extends Component {
                     color_type: detail.color_type,
                     number: detail.number.join(','),
                     is_popular: detail.is_popular,
+                    is_recommend: detail.is_recommend,
                 });
             },
         });
@@ -112,6 +113,13 @@ export default class GoodsColorEditor extends Component {
         });
     }
 
+    handleIsRecommendChange = (isRecommend) => {
+        const { form: { setFieldsValue } } = this.props;
+        setFieldsValue({
+            is_recommend: isRecommend,
+        });
+    }
+
     render() {
         const { isSubmiting } = this.state;
         const { form: { getFieldDecorator }, goodsColor: { detail, goodsListData } } = this.props;
@@ -128,10 +136,17 @@ export default class GoodsColorEditor extends Component {
                                     )}
                                 </Form.Item>
                             </Col>
-                            <Col md={8}>
+                            <Col md={4}>
                                 <Form.Item label="是否流行">
                                     {getFieldDecorator('is_popular')(
                                         <MyCheckbox onChange={e => this.handleIsPopularChange(e.target.checked)} />
+                                    )}
+                                </Form.Item>
+                            </Col>
+                            <Col md={4}>
+                                <Form.Item label="是否推荐">
+                                    {getFieldDecorator('is_recommend')(
+                                        <MyCheckbox onChange={e => this.handleIsRecommendChange(e.target.checked)} />
                                     )}
                                 </Form.Item>
                             </Col>

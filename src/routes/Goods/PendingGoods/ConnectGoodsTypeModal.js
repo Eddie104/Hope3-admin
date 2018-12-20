@@ -27,7 +27,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
     componentWillReceiveProps(nextProps) {
         this.setState({
             visible: !!nextProps.visible,
-            pendingGoods: { ...nextProps.pendingGoods },
+            pendingGoods: nextProps.pendingGoods ? [...nextProps.pendingGoods] : [],
         });
     }
 
@@ -97,6 +97,7 @@ export default class ConnectGoodsTypeModal extends PureComponent {
 
     render() {
         const { goodsTypeGender, visible, pendingGoods, goodsTypeNameKeyWord, goodsTypeListData, selectedGoodsTypeId } = this.state;
+
         return (
             <Modal
                 title="关联款型"
@@ -107,10 +108,10 @@ export default class ConnectGoodsTypeModal extends PureComponent {
                 destroyOnClose
             >
                 {
-                    pendingGoods && pendingGoods.platform && (
+                    pendingGoods && pendingGoods.length > 0 && pendingGoods[0].platform && (
                         <Row>
-                            <img style={{ width: '130px' }} alt={pendingGoods.name} src={`${IMG_SERVER}/${pendingGoods.platform}/${pendingGoods.imgs[0]}`} />
-                            {pendingGoods.name}
+                            <img style={{ width: '130px' }} alt={pendingGoods[0].name} src={`${IMG_SERVER}/${pendingGoods[0].platform}/${pendingGoods[0].imgs[0]}`} />
+                            {pendingGoods[0].name}
                         </Row>
                     )
                 }

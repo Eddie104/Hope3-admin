@@ -118,10 +118,10 @@ export default {
         *addGoodsType({ payload, callback }, { call, put }) {
             const response = yield call(addGoodsType, payload);
             if (response.success) {
-                yield call(setCheck, payload._id);
+                yield call(setCheck, [payload._id]);
                 yield put({
                     type: 'setChecked',
-                    payload: payload._id,
+                    payload: [payload._id],
                 });
                 callback && callback();
             } else {
@@ -131,10 +131,11 @@ export default {
         *connectGoodsType({ payload, callback }, { call, put }) {
             const response = yield call(connectGoodsType, payload);
             if (response.success) {
-                yield call(setCheck, payload._id);
+                const idArr = payload.targetPendingGoodsArr.map(item => item._id);
+                yield call(setCheck, idArr);
                 yield put({
                     type: 'setChecked',
-                    payload: payload._id,
+                    payload: idArr,
                 });
                 callback && callback();
             } else {
@@ -224,9 +225,8 @@ export default {
         setChecked(state, { payload }) {
             const list = [...state.listData.list];
             for (let i = 0; i < list.length; i += 1) {
-                if (list[i]._id === payload) {
+                if (payload.includes(list[i]._id)) {
                     list[i].is_checked = true;
-                    break;
                 }
             }
             return {
@@ -255,3 +255,6 @@ export default {
         },
     },
 };
+
+
+// 630358

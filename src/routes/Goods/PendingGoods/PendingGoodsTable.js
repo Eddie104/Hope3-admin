@@ -4,7 +4,7 @@ import StandardTable from '../../../components/StandardTable';
 import { IMG_SERVER, GENDER } from '../../../config';
 
 export default class PendingGoodsTable extends StandardTable {
-    createRowSelection = () => null;
+    // createRowSelection = () => null;
 
     createColumns = () => {
         return [

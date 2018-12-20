@@ -59,6 +59,10 @@ const menuData = [
                 name: '流行配色',
                 path: 'popular-goods-color-list',
             },
+            {
+                name: '推荐配色',
+                path: 'recommend-goods-color-list',
+            },
         ],
     },
 ];
