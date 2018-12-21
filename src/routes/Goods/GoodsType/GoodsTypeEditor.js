@@ -312,9 +312,9 @@ export default class GoodsTypeEditor extends Component {
                                             <GoodsColorListItem
                                                 goodsColor={item}
                                                 targetGoodsColorId={targetGoodsColorId}
-                                                handleGoodsColorClick={this.handleGoodsColorClick}
-                                                handleGoodsColorCheckboxChange={this.handleGoodsColorCheckboxChange}
-                                                handleRemoveGoodsColor={this.handleRemoveGoodsColor}
+                                                onGoodsColorClick={this.handleGoodsColorClick}
+                                                onGoodsColorCheckboxChange={this.handleGoodsColorCheckboxChange}
+                                                onRemoveGoodsColor={this.handleRemoveGoodsColor}
                                             />
                                         )
                                     }
