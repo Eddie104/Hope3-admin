@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
 import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor, removeGoodsColor } from '../services/goodsType';
+import { changeGoodsType } from '../services/goodsColor';
 
 export default {
     namespace: 'goodsType',
@@ -145,6 +146,18 @@ export default {
                     payload: payload.goodsColorId,
                 });
                 message.success('删除成功');
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *changeGoodsType({ payload, callback }, { call, put }) {
+            const response = yield call(changeGoodsType, payload);
+            if (response.success) {
+                yield put({
+                    type: 'removedGoodsColor',
+                    payload,
+                });
                 callback && callback();
             } else {
                 message.error(response.data);
@@ -307,6 +320,13 @@ export default {
                     break;
                 }
             }
+            return {
+                ...state,
+                goodsColorArr,
+            };
+        },
+        removedGoodsColor(state, { payload: { goodsColorIDArr } }) {
+            const goodsColorArr = [...state.goodsColorArr].filter(goodsColor => !goodsColorIDArr.includes(goodsColor._id));
             return {
                 ...state,
                 goodsColorArr,
