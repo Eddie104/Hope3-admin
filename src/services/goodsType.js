@@ -32,3 +32,7 @@ export async function mergeGoodsColor(params) {
 export async function removeGoodsColor(id, goodsColorId) {
     return get(`${SERVER_URL}/api/admin/remove_goods_color/${id}/${goodsColorId}`);
 }
+
+export async function setShowingInApp(id, flag) {
+    return post(`${SERVER_URL}/api/admin/set_goods_type_showing_in_app`, { id, flag });
+}

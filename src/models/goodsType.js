@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { routerRedux } from 'dva/router';
-import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor, removeGoodsColor } from '../services/goodsType';
+import { find, detail, fetchSubCategory, update, merge, mergeGoodsColor, removeGoodsColor, setShowingInApp } from '../services/goodsType';
 import { changeGoodsType } from '../services/goodsColor';
 
 export default {
@@ -156,6 +156,18 @@ export default {
             if (response.success) {
                 yield put({
                     type: 'removedGoodsColor',
+                    payload,
+                });
+                callback && callback();
+            } else {
+                message.error(response.data);
+            }
+        },
+        *setShowingInApp({ payload, callback }, { call, put }) {
+            const response = yield call(setShowingInApp, payload.id, payload.flag);
+            if (response.success) {
+                yield put({
+                    type: 'setedShowingInApp',
                     payload,
                 });
                 callback && callback();
@@ -330,6 +342,22 @@ export default {
             return {
                 ...state,
                 goodsColorArr,
+            };
+        },
+        setedShowingInApp(state, { payload: { id, flag } }) {
+            const { list } = state.listData;
+            for (let i = 0; i < list.length; i++) {
+                if (list[i]._id === id) {
+                    list[i].is_showing_on_app = flag;
+                    break;
+                }
+            }
+            return {
+                ...state,
+                listData: {
+                    ...state.listData,
+                    list,
+                },
             };
         },
     },

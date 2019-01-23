@@ -161,6 +161,14 @@ export default class PendingGoodsList extends PureComponent {
         });
     }
 
+    handleDeleteBatch = () => {
+        const { selectedRows } = this.state;
+        this.props.dispatch({
+            type: 'pendingGoods/deleteBatch',
+            payload: selectedRows.map(i => i._id),
+        });
+    }
+
     handleConnectGoodsTypeOK = (goodsTypeId) => {
         this.props.dispatch({
             type: 'pendingGoods/connectGoodsType',
@@ -307,6 +315,13 @@ export default class PendingGoodsList extends PureComponent {
                                     selectedRows.length > 1 && (
                                         <Button type="primary" onClick={this.handleConnectGoodsTypeByBatch}>
                                             批量关联款型
+                                        </Button>
+                                    )
+                                }
+                                {
+                                    selectedRows.length > 1 && (
+                                        <Button type="primary" onClick={this.handleDeleteBatch}>
+                                            批量丢垃圾桶
                                         </Button>
                                     )
                                 }
