@@ -1,8 +1,21 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Button, Row, List, Icon, Checkbox, Popconfirm, Tag } from 'antd';
 import { IMG_SERVER } from '../../../config';
 
-export default class GoodsColorListItem extends Component {
+export default class GoodsColorListItem extends PureComponent {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isChecked: false,
+        };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isChecked !== this.state.isChecked) {
+            this.setState({ isChecked: nextProps.isChecked });
+        }
+    }
+
     render() {
         const {
             goodsColor,
@@ -11,6 +24,7 @@ export default class GoodsColorListItem extends Component {
             onGoodsColorCheckboxChange,
             onRemoveGoodsColor,
         } = this.props;
+        const { isChecked } = this.state;
         return (
             <List.Item
                 key={goodsColor._id}
@@ -44,7 +58,11 @@ export default class GoodsColorListItem extends Component {
                 }
                 <Row type="flex" justify="center">
                     <Checkbox
-                        onChange={({ target: { checked } }) => onGoodsColorCheckboxChange(goodsColor, checked)}
+                        onChange={({ target: { checked } }) => {
+                            this.setState({ isChecked: checked });
+                            onGoodsColorCheckboxChange(goodsColor, checked);
+                        }}
+                        checked={isChecked}
                     >
                         {goodsColor.color_name || 'no name'}
                     </Checkbox>

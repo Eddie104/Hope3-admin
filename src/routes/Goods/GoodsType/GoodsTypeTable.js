@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'dva/router';
-import { Tag } from 'antd';
+import { Tag, Divider } from 'antd';
 import StandardTable from '../../../components/StandardTable';
 import { IMG_SERVER } from '../../../config';
 
@@ -47,9 +47,23 @@ export default class GoodsTypeTable extends StandardTable {
                 title: '操作',
                 width: '100px',
                 render: (_, record) => (
-                    <Link to={`/goods/goods-type-editor/${record._id}`}>
-                        编辑
-                    </Link>
+                    <div>
+                        <Link to={`/goods/goods-type-editor/${record._id}`}>
+                            编辑
+                        </Link>
+                        <Divider type="vertical" />
+                        {
+                            record.is_showing_on_app ? (
+                                <a onClick={() => { this.props.setShowingInApp(record._id, false); }}>
+                                    在APP上隐藏
+                                </a>
+                            ) : (
+                                <a onClick={() => { this.props.setShowingInApp(record._id, true); }}>
+                                    在APP上显示
+                                </a>
+                            )
+                        }
+                    </div>
                 ),
             },
         ];

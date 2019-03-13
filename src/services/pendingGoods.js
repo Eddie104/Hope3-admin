@@ -32,3 +32,7 @@ export async function autoConnectByName() {
 export async function deletePendingGoods(_id) {
     return get(`${SERVER_URL}/api/admin/delete_pending_goods/${_id}`);
 }
+
+export async function deletePendingGoodsBatch(idArr) {
+    return post(`${SERVER_URL}/api/admin/delete_pending_goods_batch`, { idArr });
+}

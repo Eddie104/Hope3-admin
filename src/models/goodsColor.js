@@ -1,5 +1,11 @@
 import { message } from 'antd';
-import { detail, update, removeGoods, findPopular, findRecommend } from '../services/goodsColor';
+import {
+    detail,
+    update,
+    removeGoods,
+    findPopular,
+    findRecommend,
+} from '../services/goodsColor';
 
 export default {
     namespace: 'goodsColor',

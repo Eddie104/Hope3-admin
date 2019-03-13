@@ -9,6 +9,7 @@ import {
     autoConnectByNumber,
     autoConnectByName,
     deletePendingGoods,
+    deletePendingGoodsBatch,
 } from '../services/pendingGoods';
 import {
     fetchSubCategory,
@@ -178,6 +179,18 @@ export default {
                 message.error(response.data);
             }
         },
+        *deleteBatch({ payload, callback }, { call, put }) {
+            const response = yield call(deletePendingGoodsBatch, payload);
+            if (response.success) {
+                yield put({
+                    type: 'setDeletedBatch',
+                    payload,
+                });
+                callback && callback(response.data);
+            } else {
+                message.error(response.data);
+            }
+        },
     },
 
     reducers: {
@@ -243,6 +256,21 @@ export default {
                 if (list[i]._id === payload) {
                     list[i].is_deleted = true;
                     break;
+                }
+            }
+            return {
+                ...state,
+                listData: {
+                    ...state.listData,
+                    list,
+                },
+            };
+        },
+        setDeletedBatch(state, { payload }) {
+            const list = [...state.listData.list];
+            for (let i = 0; i < list.length; i += 1) {
+                if (payload.includes(list[i]._id)) {
+                    list[i].is_deleted = true;
                 }
             }
             return {

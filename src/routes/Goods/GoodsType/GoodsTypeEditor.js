@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Card, Button, Input, Form, Row, Col, Select, Divider, List, message, Modal, Radio } from 'antd';
 import GoodsColorListItem from './GoodsColorListItem';
+import ConnectGoodsTypeModal from '../PendingGoods/ConnectGoodsTypeModal';
 import PageHeaderLayout from '../../../layouts/PageHeaderLayout';
 import FooterToolbar from '../../../components/FooterToolbar';
 import { GENDER } from '../../../config';
@@ -13,6 +14,7 @@ const RadioGroup = Radio.Group;
 @connect(state => ({
     goodsType: state.goodsType,
     goodsColor: state.goodsColor,
+    pendingGoods: state.pendingGoods,
 }))
 @Form.create()
 export default class GoodsTypeEditor extends Component {
@@ -21,6 +23,7 @@ export default class GoodsTypeEditor extends Component {
         this.state = {
             series: [],
             mergeGoodsColorModalVisible: false,
+            isShowingConnectGoodsTypeModal: false,
             selectedGoodsColor: [],
             mergeTargetGoodsColor: null,
             targetGoodsColorId: null,
@@ -147,8 +150,60 @@ export default class GoodsTypeEditor extends Component {
         this.setState({ selectedGoodsColor });
     }
 
+    handleAllGoodsColorSelected = (goodsColorArr, isChecked) => {
+        const selectedGoodsColor = [...this.state.selectedGoodsColor];
+        let goodsColor = null;
+        for (let i = 0; i < goodsColorArr.length; i++) {
+            goodsColor = goodsColorArr[i];
+            let index = -1;
+            for (let j = 0; j < selectedGoodsColor.length; j++) {
+                if (selectedGoodsColor[j]._id === goodsColor._id) {
+                    index = j;
+                    break;
+                }
+            }
+            if (isChecked) {
+                if (index === -1) {
+                    selectedGoodsColor.push(goodsColor);
+                }
+            } else if (index !== -1) {
+                selectedGoodsColor.splice(index, 1);
+            }
+        }
+        this.setState({ selectedGoodsColor });
+    }
+
     handleMergeSelectedGoodsColor = () => {
         this.setState({ mergeGoodsColorModalVisible: true });
+    }
+
+    handleChangeGoodsType = () => {
+        this.setState({
+            isShowingConnectGoodsTypeModal: true,
+        });
+    }
+
+    handleChangeGoodsTypeOK = (goodsTypeId) => {
+        const { selectedGoodsColor } = this.state;
+        this.props.dispatch({
+            type: 'goodsType/changeGoodsType',
+            payload: {
+                goodsColorIDArr: selectedGoodsColor.map(goodsColor => goodsColor._id),
+                goodsTypeId,
+            },
+            callback: () => {
+                this.setState({
+                    selectedGoodsColor: [],
+                    isShowingConnectGoodsTypeModal: false,
+                });
+            },
+        });
+    }
+
+    handleChangeGoodsTypeCancel = () => {
+        this.setState({
+            isShowingConnectGoodsTypeModal: false,
+        });
     }
 
     handleMergeTargetGoodsColorChange = ({ target: { value } }) => {
@@ -181,7 +236,7 @@ export default class GoodsTypeEditor extends Component {
     }
 
     render() {
-        const { series, mergeGoodsColorModalVisible, selectedGoodsColor, targetGoodsColorId } = this.state;
+        const { series, mergeGoodsColorModalVisible, selectedGoodsColor, targetGoodsColorId, isShowingConnectGoodsTypeModal } = this.state;
         const { form: { getFieldDecorator }, goodsType: { goodsColorArr, brands, category, subCategory } } = this.props;
         const newGoodsColorArr = [];
         let number = null;
@@ -212,6 +267,8 @@ export default class GoodsTypeEditor extends Component {
         for (let index = 0; index < newGoodsColorArr.length; index++) {
             newGoodsColorArr[index].goodsColorArr.sort(sortFunc);
         }
+
+        const selectedGoodsColorIdArr = selectedGoodsColor.map(goodsColor => goodsColor._id);
         return (
             <PageHeaderLayout>
                 <Card bordered={false}>
@@ -295,14 +352,24 @@ export default class GoodsTypeEditor extends Component {
                             </Col>
                         </Row>
                     </Form>
-                    <Divider>配色信息</Divider>
-                    <Button type="primary" style={{ marginBottom: '12px' }} onClick={this.handleMergeSelectedGoodsColor}>
-                        合并配色
-                    </Button>
                     {
                         newGoodsColorArr.map((goodsColorArrData, i) => (
                             <div key={`list${i}`}>
                                 <Divider>{goodsColorArrData.numberKey}</Divider>
+                                <Row type="flex" justify="start">
+                                    <Button type="primary" onClick={() => { this.handleAllGoodsColorSelected(goodsColorArrData.goodsColorArr, true); }}>
+                                        全选
+                                    </Button>
+                                    <Button type="primary" style={{ marginLeft: '12px' }} onClick={() => { this.handleAllGoodsColorSelected(goodsColorArrData.goodsColorArr, false); }}>
+                                        全不选
+                                    </Button>
+                                    <Button type="primary" style={{ marginLeft: '12px' }} onClick={this.handleMergeSelectedGoodsColor}>
+                                        合并配色
+                                    </Button>
+                                    <Button type="primary" style={{ marginLeft: '12px' }} onClick={this.handleChangeGoodsType}>
+                                        更换款型
+                                    </Button>
+                                </Row>
                                 <List
                                     rowKey="id"
                                     grid={{ lg: 6, md: 1, sm: 1, xs: 1 }}
@@ -315,6 +382,7 @@ export default class GoodsTypeEditor extends Component {
                                                 onGoodsColorClick={this.handleGoodsColorClick}
                                                 onGoodsColorCheckboxChange={this.handleGoodsColorCheckboxChange}
                                                 onRemoveGoodsColor={this.handleRemoveGoodsColor}
+                                                isChecked={selectedGoodsColorIdArr.includes(item._id)}
                                             />
                                         )
                                     }
@@ -352,6 +420,13 @@ export default class GoodsTypeEditor extends Component {
                         }
                     </RadioGroup>
                 </Modal>
+                <ConnectGoodsTypeModal
+                    visible={isShowingConnectGoodsTypeModal}
+                    // pendingGoods={targetPendingGoodsArr}
+                    dispatch={this.props.dispatch}
+                    handleOk={this.handleChangeGoodsTypeOK}
+                    handleCancel={this.handleChangeGoodsTypeCancel}
+                />
             </PageHeaderLayout>
         );
     }

@@ -19,6 +19,7 @@ const FIELDS = {
     sub_category: 1,
     series: 1,
     is_hot: 1,
+    is_showing_on_app: 1,
 };
 
 @connect(state => ({
@@ -69,6 +70,16 @@ export default class GoodsTypeList extends PureComponent {
         dispatch({
             type: 'goodsType/find',
             payload: params,
+        });
+    }
+
+    handleShowingInApp = (id, flag) => {
+        this.props.dispatch({
+            type: 'goodsType/setShowingInApp',
+            payload: {
+                id,
+                flag,
+            },
         });
     }
 
@@ -338,6 +349,7 @@ export default class GoodsTypeList extends PureComponent {
                             data={listData}
                             onSelectRow={this.handleSelectRows}
                             onChange={this.handleStandardTableChange}
+                            setShowingInApp={this.handleShowingInApp}
                         />
                     </div>
                 </Card>

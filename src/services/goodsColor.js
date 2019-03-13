@@ -20,3 +20,7 @@ export async function findPopular(page, count) {
 export async function findRecommend(page, count) {
     return get(`${SERVER_URL}/api/admin/find_recommend/${page}/${count}`);
 }
+
+export async function changeGoodsType(params) {
+    return post(`${SERVER_URL}/api/admin/goods_color/change_goods_type`, params);
+}
